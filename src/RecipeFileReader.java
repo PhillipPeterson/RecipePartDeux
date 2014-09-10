@@ -1,7 +1,7 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.Writer;
 
 public class RecipeFileReader {
 
@@ -15,12 +15,65 @@ public class RecipeFileReader {
 	final String RECIPE_CATEGORY_DELIM = "Category:";
 	final String RECIPE_END_DELIM = "EndOfRecipe";
 	final String DELIMETER = "\\|\\|\\|";
+    final String DELIM_TO_TEXT = "|||";
+    final String NEWLINE = "\r\n";
 	
 	RecipeFileReader(String filePath)
 	{
 		this.filePath = filePath;
 	}
-	
+
+
+    //convert the information into a string to store in the raw text for persistance
+    //example output
+    //Name:Apple Cornbread
+    //Ingredients:2 apples peeled and chopped thinly|||1 1/2 Cup unbleached white flour|||1 1/2 cup blue corn meal or regular yellow corn meal|||3 1/2 tsp baking soda|||1/2 tsp salt|||1 tbsp Sucanat or Brown Sugar||| 2 1/4 cup vanilla soymilk|||1 tsp cinnamon|||1/4 cup apple sauce|||2 tbsp maple syrup|||
+    //Preparation:1. Preheat oven to 400�F.|||2. In a large bowl, combine all ingredients except the apple.|||3. Mix in the apple. Do not overmix as the bread could become tough.|||4. Bake 35-45 minutes on the top shelf of the oven.|||5. Bread is done when an inserted knife comes out clean, about 40 minutes.|||
+    //Category:Breakfast
+    //EndOfRecipe
+    public void writeToFile(ArrayList<Recipe> recipeList)
+    {
+        String outputString = "";
+        for(Integer i = 0; i < recipeList.size(); i++) {
+            outputString += RECIPE_NAME_DELIM + recipeList.get(i).getName() + NEWLINE;
+            outputString += RECIPE_INGREDIENTS_DELIM;
+            String[] ingredients = recipeList.get(i).getIngredients();
+            for(Integer j = 0; j < ingredients.length; j++) {
+                outputString += ingredients[j] + DELIM_TO_TEXT;
+            }
+            outputString += NEWLINE + RECIPE_PREPARATION_DELIM;
+            String[] directions = recipeList.get(i).getDirections();
+            for(Integer j = 0; j < directions.length; j++) {
+                outputString += directions[j] + DELIM_TO_TEXT;
+            }
+            outputString += NEWLINE + RECIPE_CATEGORY_DELIM;
+            String[] categories = recipeList.get(i).getCategories();
+            for(Integer j = 0; j < categories.length; j++) {
+                outputString += categories[j] + DELIM_TO_TEXT;
+            }
+            outputString += NEWLINE + RECIPE_END_DELIM + NEWLINE;
+        }
+        for (Integer i = 0; i < recipeList.size(); i++) {
+            System.out.println(recipeList.get(i).getName());
+        }
+
+
+
+        Writer writer = null;
+
+        try {
+            writer = new BufferedWriter(new OutputStreamWriter(
+                    new FileOutputStream(filePath), "utf-8"));
+            writer.write(outputString);
+        } catch (IOException ex) {
+            // report
+        } finally {
+            try {writer.close();} catch (Exception ex) {}
+        }
+
+
+    }
+
 	public ArrayList<Recipe> readInRecipes() throws FileNotFoundException
 	{
 		ArrayList<Recipe> recipeList = new ArrayList<Recipe>();

@@ -28,6 +28,11 @@ public class Recipe {
 		return this.ingredients;
 		
 	}
+
+    public String[] getDirections(){
+        return this.directions;
+    }
+
 	public String toString() {
 		String output = "\n--- " + name + " ---";
 		
