@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 
@@ -64,68 +66,28 @@ public class Search {
 
 	}
 
-	public static ArrayList<String> findCategories(ArrayList<Recipe> recipeArray) {
-		ArrayList<String> categoryList = new ArrayList<String>();
-		categoryList.add("Test");
-		boolean copy = false;
-		for (Recipe recipe : recipeArray) {
-			for (String category : recipe.getCategories()) {
-				copy = true;
-				for (int i = 0; i < categoryList.size(); i++) {
-					if (category.toLowerCase().equals(
-							categoryList.get(i).toLowerCase())) {
-						copy = false;
-					}
-				}
-				if (copy) {
-					categoryList.add("" + category + "");
-				}
-			}
-		}
-		categoryList.remove(0);
-		return categoryList;
+	public static Set<String> findCategories(ArrayList<Recipe> recipeArray) {
+		Set<String> categorySet = new HashSet<String>();
+        for (Recipe r : recipeArray) {
+            for (String i : r.getCategories()) {
+                categorySet.add(i.toLowerCase());
+            }
+        }
+		return categorySet;
 
 	}
 
-	public static ArrayList<String> findIngredients(
+	public static Set<String> findIngredients(
 			ArrayList<Recipe> recipeArray) {
 
-		ArrayList<String> ingredientList = new ArrayList<String>();
+		Set<String> ingredientsSet = new HashSet<String>();
+        for (Recipe r : recipeArray) {
+            for (String i : r.getIngredients()) {
+                ingredientsSet.add(i.toLowerCase());
+            }
+        }
 
-		ingredientList.add("Placeholder");
-
-		boolean copy = false;
-
-		for (Recipe recipe : recipeArray) {
-
-			for (String ingredient : recipe.getIngredients()) {
-
-				copy = true;
-
-				for (int i = 0; i < ingredientList.size(); i++) {
-
-					if (ingredient.toLowerCase().equals(
-							ingredientList.get(i).toLowerCase())) {
-
-						copy = false;
-
-					}
-
-				}
-
-				if (copy) {
-
-					ingredientList.add("" + ingredient + "");
-
-				}
-
-			}
-
-		}
-
-		ingredientList.remove(0);
-
-		return ingredientList;
+		return ingredientsSet;
 
 	}
 
