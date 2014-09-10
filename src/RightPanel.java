@@ -26,7 +26,6 @@ public class RightPanel extends JPanel{
 	public RightPanel(){
 		this.recipeTitle = new JLabel("Title",SwingConstants.CENTER);
 		this.recipeTitle.setPreferredSize(new Dimension(500,50));
-		this.recipeTitle.setBorder(BorderFactory.createLineBorder(Color.BLUE, 2));
 		this.recipeTitle.setFont(new Font("Serif", Font.PLAIN, 50));
 		
 		this.recipe = new JTextArea();
@@ -46,7 +45,6 @@ public class RightPanel extends JPanel{
 		this.searchPanel.add(this.search);
 		this.searchPanel.add(this.searchBar);
 		this.searchPanel.setLayout(new BoxLayout(this.searchPanel,BoxLayout.X_AXIS));
-		this.searchPanel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 2));
 		
 		setLayout(new BorderLayout());
 		add(this.recipeTitle,BorderLayout.NORTH);

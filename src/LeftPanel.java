@@ -20,16 +20,15 @@ public class LeftPanel extends JPanel{
     	this.programTitle = new JLabel("Recipes",SwingConstants.CENTER);
     	this.programTitle.setFont(new Font("Serif", Font.PLAIN, 45));
     	this.programTitle.setPreferredSize(new Dimension(300,50));
-    	this.programTitle.setBorder(BorderFactory.createLineBorder(Color.BLUE, 2));
     	
     	this.recipes = new JPanel();
-    	this.recipes.setBorder(BorderFactory.createLineBorder(Color.BLUE, 2));
+
     	this.recipes.setPreferredSize(new Dimension(300,900));
     	
     	this.mainPanel = new JPanel();
     	this.mainPanel.setPreferredSize(new Dimension(300,100));
     	
-    	this.categories = new JComboBox<String>();
+    	this.categories = new JComboBox<>();
     	this.categories.setPreferredSize(new Dimension(300,50));
     
         this.edit = new JButton();
@@ -38,6 +37,7 @@ public class LeftPanel extends JPanel{
         this.edit.setIcon(this.editIcon);
         this.delete.setIcon(this.deleteIcon);
         this.add.setIcon(this.addIcon);
+        
         
         this.buttonPanel = new JPanel();
         this.buttonPanel.add(edit);
