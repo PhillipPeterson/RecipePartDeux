@@ -22,7 +22,7 @@ public class LeftPanel extends JPanel{
     	this.programTitle.setPreferredSize(new Dimension(300,50));
     	
     	this.recipes = new JPanel();
-
+    	this.recipes.setBorder(BorderFactory.createBevelBorder(1));
     	this.recipes.setPreferredSize(new Dimension(300,900));
     	
     	this.mainPanel = new JPanel();

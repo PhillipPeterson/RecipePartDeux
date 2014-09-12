@@ -19,14 +19,17 @@ public class RightPanel extends JPanel{
 	
 	private ImageIcon searchIcon;
 	private JTextArea recipe;
-	private JLabel recipeTitle, search;
+	private JLabel recipeTitle, search, tags;
 	private JTextField searchBar;
-	private JPanel searchPanel;
+	private JPanel searchPanel,mainPanel,titlePanel;
 	
 	public RightPanel(){
 		this.recipeTitle = new JLabel("Title",SwingConstants.CENTER);
 		this.recipeTitle.setPreferredSize(new Dimension(500,50));
 		this.recipeTitle.setFont(new Font("Serif", Font.PLAIN, 50));
+		
+		this.tags = new JLabel("Tags:");
+		this.tags.setBorder(BorderFactory.createBevelBorder(1));
 		
 		this.recipe = new JTextArea();
 		this.recipe.setPreferredSize(new Dimension(700,500));
@@ -46,10 +49,19 @@ public class RightPanel extends JPanel{
 		this.searchPanel.add(this.searchBar);
 		this.searchPanel.setLayout(new BoxLayout(this.searchPanel,BoxLayout.X_AXIS));
 		
-		setLayout(new BorderLayout());
-		add(this.recipeTitle,BorderLayout.NORTH);
-		add(this.recipe,BorderLayout.CENTER);
-		add(this.searchPanel,BorderLayout.SOUTH);
+		this.titlePanel = new JPanel();
+		this.titlePanel.setLayout(new BorderLayout());
+		this.titlePanel.add(this.recipeTitle,BorderLayout.NORTH);
+		
+		this.mainPanel = new JPanel();
+		this.mainPanel.setLayout(new BorderLayout());
+		this.mainPanel.add(this.tags,BorderLayout.NORTH);
+		this.mainPanel.add(this.recipe,BorderLayout.CENTER);
+		this.mainPanel.add(this.searchPanel,BorderLayout.SOUTH);
+		
+		setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+		add(this.titlePanel);
+		add(this.mainPanel);
 		setPreferredSize(new Dimension(700,600));
 	}
 	
