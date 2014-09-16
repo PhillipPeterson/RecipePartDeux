@@ -8,6 +8,7 @@ import java.awt.event.FocusListener;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -19,7 +20,8 @@ public class RightPanel extends JPanel{
 	
 	private ImageIcon searchIcon;
 	private JTextArea recipe;
-	private JLabel recipeTitle, search, tags;
+	private JLabel recipeTitle, tags;
+	private JButton search;
 	private JTextField searchBar;
 	private JPanel searchPanel,mainPanel,titlePanel;
 	
@@ -38,7 +40,7 @@ public class RightPanel extends JPanel{
 		this.searchBar.addFocusListener(new Prompt());
 		
 		this.searchIcon = new ImageIcon("./Icons/search.png");
-		this.search = new JLabel();
+		this.search = new JButton();
 		this.search.setIcon(this.searchIcon);
 		this.search.setPreferredSize(new Dimension(30,30));
 		
