@@ -20,7 +20,9 @@ import javax.swing.UIManager.*;
 
 public class Driver {
 	
-	
+	public static RightPanel rightPanel = new RightPanel();
+        public static EditPanel editPanel = new EditPanel();
+        public static AddPanel addPanel = new AddPanel();
 	
 	public static void main(String[] args) throws FileNotFoundException {
 		
@@ -38,9 +40,14 @@ public class Driver {
 		} catch (Exception e) {
 		    // If Nimbus is not available, you can set the GUI to another look and feel.
 		}
+                
+                addPanel.setVisible(false);
+                editPanel.setVisible(false);
 		JPanel mainPanel = new JPanel();
 		mainPanel.add(new LeftPanel());
-		mainPanel.add(new RightPanel());
+		mainPanel.add(rightPanel);
+                mainPanel.add(addPanel);
+                mainPanel.add(editPanel);
 		mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.X_AXIS));
 		
 		JFrame frame = new JFrame();

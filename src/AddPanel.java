@@ -1,12 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import java.awt.event.*;
 
 
-public class AddPanel extends JPanel{
+public class AddPanel extends JPanel implements ActionListener{
     
-    private JButton addButton;
+    private JButton addButton, cancelButton;
     private JLabel titleLabel, recipeLabel;
     private JLabel tagLabel, ingLabel, dirLabel;
     private JTextField name, tags, ingrediants;
@@ -17,6 +16,9 @@ public class AddPanel extends JPanel{
     public AddPanel(){
         
         addButton = new JButton("Add Recipe");
+        addButton.addActionListener(this);
+        cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(this);
         
         titleLabel = new JLabel("Add Recipe",SwingConstants.CENTER);
         titleLabel.setPreferredSize(new Dimension(500,50));
@@ -69,7 +71,8 @@ public class AddPanel extends JPanel{
         dirPanel.add(dirLabel,BorderLayout.NORTH);
         dirPanel.add(directions, BorderLayout.SOUTH);
         
-        buttonPanel.add(addButton, BorderLayout.SOUTH);
+        buttonPanel.add(addButton);
+        buttonPanel.add(cancelButton);
         
         
         mainPanel.add(namePanel);
@@ -84,6 +87,19 @@ public class AddPanel extends JPanel{
         
         setPreferredSize(new Dimension(700,600));
         
+    }
+    
+    public void actionPerformed(ActionEvent e)
+    {
+        if (e.getSource().equals(cancelButton))
+        {
+            this.setVisible(false);
+            Driver.rightPanel.setVisible(true);
+        }
+        if(e.getSource().equals(addButton))
+        {
+            //code for saving recipe to database
+        }
     }
     
     public class Prompt implements FocusListener 
@@ -112,4 +128,7 @@ public class AddPanel extends JPanel{
         
         public void focusLost(FocusEvent e){}
     }
+    
+    
+    
 }

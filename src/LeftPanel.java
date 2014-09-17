@@ -1,8 +1,9 @@
 import javax.swing.*;
+import java.awt.event.*;
 
 import java.awt.*;
 
-public class LeftPanel extends JPanel{
+public class LeftPanel extends JPanel implements ActionListener{
 
 	private ImageIcon editIcon,deleteIcon,addIcon;
     private JButton edit,delete,add;
@@ -34,6 +35,9 @@ public class LeftPanel extends JPanel{
         this.edit = new JButton();
         this.delete = new JButton();
         this.add = new JButton();
+        edit.addActionListener(this);
+        delete.addActionListener(this);
+        add.addActionListener(this);
         this.edit.setIcon(this.editIcon);
         this.delete.setIcon(this.deleteIcon);
         this.add.setIcon(this.addIcon);
@@ -57,7 +61,29 @@ public class LeftPanel extends JPanel{
         setPreferredSize(new Dimension(300,600));
         
 
-
+    }
+    
+    public void actionPerformed(ActionEvent e)
+    {
+        if (e.getSource().equals(edit))
+        {
+            Driver.rightPanel.setVisible(false);
+            Driver.addPanel.setVisible(false);
+            Driver.editPanel.setVisible(true);
+            
+            
+        }
+        if(e.getSource().equals(add))
+        {
+            Driver.rightPanel.setVisible(false);
+            Driver.editPanel.setVisible(false);
+            Driver.addPanel.setVisible(true);
+        }
+        if(e.getSource().equals(delete))
+        {
+            JOptionPane.showConfirmDialog(null, "Are you sure you want to delete"
+                    + " this recipe?", "Delete Recipe", JOptionPane.YES_NO_OPTION);
+        }
     }
 
 }

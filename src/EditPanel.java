@@ -1,10 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 
-public class EditPanel extends JPanel{
+public class EditPanel extends JPanel implements ActionListener{
     
-    private JButton saveButton;
+    private JButton saveButton, cancelButton;
     private JLabel titleLabel, recipeLabel;
     private JLabel tagLabel, ingLabel, dirLabel;
     private JTextField name, tags, ingrediants;
@@ -15,6 +16,9 @@ public class EditPanel extends JPanel{
     public EditPanel(){
         
         saveButton = new JButton("Save Recipe");
+        saveButton.addActionListener(this);
+        cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(this);
         
         titleLabel = new JLabel("Edit Recipe",SwingConstants.CENTER);
         titleLabel.setPreferredSize(new Dimension(500,50));
@@ -63,7 +67,8 @@ public class EditPanel extends JPanel{
         dirPanel.add(dirLabel,BorderLayout.NORTH);
         dirPanel.add(directions, BorderLayout.SOUTH);
         
-        buttonPanel.add(saveButton, BorderLayout.SOUTH);
+        buttonPanel.add(saveButton);
+        buttonPanel.add(cancelButton);
         
         
         mainPanel.add(namePanel);
@@ -78,5 +83,18 @@ public class EditPanel extends JPanel{
         
         setPreferredSize(new Dimension(700,600));
         
+    }
+    
+    public void actionPerformed(ActionEvent e)
+    {
+        if (e.getSource().equals(cancelButton))
+        {
+            this.setVisible(false);
+            Driver.rightPanel.setVisible(true);
+        }
+        if(e.getSource().equals(saveButton))
+        {
+            //code for adding recipe to database
+        }
     }
 }
