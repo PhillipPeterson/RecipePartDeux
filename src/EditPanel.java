@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.UIManager.LookAndFeelInfo;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -14,6 +16,17 @@ public class EditPanel extends JPanel implements ActionListener{
             buttonPanel, mainPanel;
     
     public EditPanel(){
+    	
+		try {
+		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+		        if ("Nimbus".equals(info.getName())) {
+		            UIManager.setLookAndFeel(info.getClassName());
+		            break;
+		        }
+		    }
+		} catch (Exception e) {
+		    // If Nimbus is not available, you can set the GUI to another look and feel.
+		}
         
         saveButton = new JButton("Save Recipe");
         saveButton.addActionListener(this);

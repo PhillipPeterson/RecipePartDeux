@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.UIManager.LookAndFeelInfo;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -15,6 +17,17 @@ public class AddPanel extends JPanel implements ActionListener{
     
     public AddPanel(){
         
+		try {
+		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+		        if ("Nimbus".equals(info.getName())) {
+		            UIManager.setLookAndFeel(info.getClassName());
+		            break;
+		        }
+		    }
+		} catch (Exception e) {
+		    // If Nimbus is not available, you can set the GUI to another look and feel.
+		}
+		
         addButton = new JButton("Add Recipe");
         addButton.addActionListener(this);
         cancelButton = new JButton("Cancel");
