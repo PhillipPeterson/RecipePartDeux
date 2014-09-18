@@ -2,44 +2,31 @@
 
 public class Recipe {
 	
-	String name;
-	String[] ingredients;
-	String[] categories;
-	String[] directions;
+	public String name;
+    public String description;
+	public DatabaseEntry[] ingredients;
+    public DatabaseEntry[] ingredientAmounts;
+	public DatabaseEntry[] categories;
+	public DatabaseEntry[] directions;
+    public int recipeId;
 	
-	Recipe(String _name, String[] _ingredients, String[] _categories, String[] _directions) {
-		this.name = _name;
-		this.ingredients = _ingredients;
-		this.categories = _categories;
-		this.directions = _directions;
+	Recipe(String _name, String _description, DatabaseEntry[] _ingredients, DatabaseEntry[] _ingredientAmounts, DatabaseEntry[] _categories, DatabaseEntry[] _directions) {
+		name = _name;
+        description = _description;
+		ingredients = _ingredients;
+        ingredientAmounts = _ingredientAmounts;
+		categories = _categories;
+		directions = _directions;
 		
 	}
 	
-	public String getName(){
-		return this.name;
-	}
-	
-	public String[] getCategories(){
-		return this.categories;
-		
-	}
-	
-	public String[] getIngredients(){
-		return this.ingredients;
-		
-	}
-	
-    public String[] getDirections(){
-		 return this.directions;
-		 }
-	 
-	 
 	public String toString() {
 		String output = "\n--- " + name + " ---";
+        output += "\nDescription: " + description;
 		
 		output += "\n\tIngredients:";
 		for (int i = 0; i < ingredients.length; i++) {
-			output += "\n\t\t" + ingredients[i];		//
+			output += "\n\t\t" + ingredients[i] + "(" + ingredientAmounts[i] + ")";		//
 		}
 		output += "\n\tCategories:";
 		for (int c = 0; c < categories.length; c++) {
@@ -57,19 +44,17 @@ public class Recipe {
         System.out.println("Testing the Recipe Class:");
         System.out.println(" - Recipe.equals(): " + recipeEqualsTest());
 
-
-
     }
 
     public boolean equals(Recipe other) {
         boolean output = this.name.equalsIgnoreCase(other.name);
-        output &= equalStringArrays(ingredients, other.ingredients);
-        output &= equalStringArrays(categories, other.categories);
-        output &= equalStringArrays(directions, other.directions);
+        output &= equalDatabaseEntryArrays(ingredients, other.ingredients);
+        output &= equalDatabaseEntryArrays(categories, other.categories);
+        output &= equalDatabaseEntryArrays(directions, other.directions);
         return output;
     }
 
-    public static boolean equalStringArrays(String[] arr1, String[] arr2) {
+    public static boolean equalDatabaseEntryArrays(DatabaseEntry[] arr1, DatabaseEntry[] arr2) {
         boolean output = true;
         if(arr1 == null){
             if(arr2 != null) {
@@ -81,7 +66,7 @@ public class Recipe {
         }
         else if(arr1.length == arr2.length) {
             for(int i =0; i< arr1.length; i++) {
-                output &= arr1[i].equalsIgnoreCase(arr2[i]);
+                output &= arr1[i].name.equalsIgnoreCase(arr2[i].name);
             }
         }
         else
@@ -89,14 +74,17 @@ public class Recipe {
         return output;
     }
 
-
     private static String recipeEqualsTest() {
         // create some recipes to test...
-        Recipe first  = new Recipe("testRecipe", new String[]{"ingredient1", "ingredient2"}, new String[]{"category1", "category2"}, new String[]{"direction1", "direction2"});
-        Recipe second = new Recipe("testRecipe", new String[]{"ingredient1", "ingredient2"}, new String[]{"category1", "category2"}, new String[]{"direction1", "direction2"});
-        Recipe third = new Recipe("testRecipe2", new String[]{"ingredient1", "ingredient2"}, new String[]{"category1", "category2"}, new String[]{"direction1", "direction2"});
-        Recipe fourth = new Recipe("testRecipe", new String[]{"ingredient1", "ingredient3"}, new String[]{"category1", "category2"}, new String[]{"direction1", "direction2"});
-        Recipe fifth = new Recipe("testRecipe", new String[]{"ingredient1", "ingredient2"}, new String[]{"category1"}, new String[]{"direction1", "direction2"});
+        DatabaseEntry ingredient1 = new DatabaseEntry(1, "ingredient1");
+        DatabaseEntry ingredient2 = new DatabaseEntry(2, "ingredient1");
+        DatabaseEntry ingredient3 = new DatabaseEntry(1, "ingredient1");
+        DatabaseEntry category = new DatabaseEntry(1, "Drinks");
+        DatabaseEntry direction = new DatabaseEntry(1, "Stir");
+        Recipe first  = new Recipe("testRecipe", "testRecipe", new DatabaseEntry[]{ingredient1, ingredient2}, new DatabaseEntry[]{ingredient1, ingredient2}, new DatabaseEntry[]{category}, new DatabaseEntry[]{direction});
+        Recipe second  = new Recipe("TESTRECIPE","testRecipe", new DatabaseEntry[]{ingredient1, ingredient2}, new DatabaseEntry[]{ingredient1, ingredient2}, new DatabaseEntry[]{category}, new DatabaseEntry[]{direction});
+        Recipe third  = new Recipe("testRecipe2", "testRecipe", new DatabaseEntry[]{ingredient1, ingredient2}, new DatabaseEntry[]{ingredient1, ingredient2}, new DatabaseEntry[]{category}, new DatabaseEntry[]{direction});
+        Recipe fourth  = new Recipe("testRecipe", "testRecipe", new DatabaseEntry[]{ingredient3, ingredient2}, new DatabaseEntry[]{ingredient1, ingredient2}, new DatabaseEntry[]{category}, new DatabaseEntry[]{direction});
 
         String returnString = "";
         boolean testSuccessful;
@@ -115,17 +103,13 @@ public class Recipe {
         if(!test3Success)
             returnString += "test3, ";
 
-        // compare the first and fourth - should be false due to different ingredients
-        boolean test4Success = !first.equals(fourth);
+        // compare the first and fourth - should be true
+        boolean test4Success = first.equals(fourth);
         if(!test4Success)
             returnString += "test4, ";
 
-        // compare the first and fifth - should be false due to different categories
-        boolean test5Success = !first.equals(fifth);
-        if(!test5Success)
-            returnString += "test5, ";
 
-        testSuccessful = test1Success && test2Success && test3Success && test4Success && test5Success;
+        testSuccessful = test1Success && test2Success && test3Success && test4Success;
 
         if(testSuccessful)
             returnString = "success";
@@ -133,5 +117,7 @@ public class Recipe {
             returnString = "failure: " + returnString;
         return returnString;
     }
+
+
 
 }
