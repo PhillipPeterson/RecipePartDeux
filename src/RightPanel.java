@@ -89,7 +89,10 @@ public class RightPanel extends JPanel{
 		//removes text from searchBar when it regains focus 
 	   if(e.getSource() == searchBar)
 	   {
-	     searchBar.setText("");
+		   
+		 if(searchBar.getText().equals("search")){
+			 searchBar.setText("");
+		 }
 	   }
 	 }
 	 public void focusLost(FocusEvent e)
