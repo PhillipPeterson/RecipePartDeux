@@ -1,5 +1,13 @@
 import java.sql.*;
 
+//public static DatabaseEntry[] getRecipes()
+//public static DatabaseEntry[] getRecipesWithName(String name)
+//public static DatabaseEntry[] getRecipesInCategory(String category)
+//public static Recipe readRecipe(int recipeId)
+//public static String [] getCategories()
+//public static void deleteRecipe(int recipeId)
+//public static int insertRecipe (String _recipeName, String _description, String[] _ingredients, String[] _ingredientAmounts, String[] _categories, String _directions), returns recipeId of the new recipe
+//public static int updateRecipe(Recipe recipe), returns recipeId of the new recipe
 
 public class recipeDatabase {
     private static String sTempDb = "recipe.db";
@@ -14,11 +22,14 @@ public class recipeDatabase {
 
             printRecipes();
             stmt.executeUpdate("delete from recipes;");
-            insertRecipe("ramen", "dehydrated salty noodles", new String[]{"dry ramen", "water"}, new String[]{"one package", "1 cup"}, new String[]{"snacks"}, new String[]{"boil water", "place ramen in boiling water", "consume"});
-            insertRecipe("soup", "canned soup", new String[]{"soup", "water"}, new String[]{"one can", "one cup"}, new String[]{"snacks","side dishes"}, new String[]{"combine ingredients", "add heat"});
+            stmt.executeUpdate("delete from recipes_categories;");
+            stmt.executeUpdate("delete from categories;");
+            insertRecipe("ramen noodles", "dehydrated salty noodles", new String[]{"dry ramen", "water"}, new String[]{"one package", "1 cup"}, new String[]{"snacks"}, "boil water, place ramen in boiling water, consume");
+            insertRecipe("soup", "canned soup", new String[]{"soup", "water"}, new String[]{"one can", "one cup"}, new String[]{"snacks","side dishes"}, "combine ingredients, add heat");
             printRecipes();
 
-            for(DatabaseEntry recipe:sortedList()) {
+
+            for(DatabaseEntry recipe:getRecipesWithName("s")) {
                 System.out.println(readRecipe(recipe.id).toString());
             }
 
@@ -27,7 +38,6 @@ public class recipeDatabase {
             e.printStackTrace();
         }
 }
-
 
     public static void init() throws Exception {
         String sDbUrl;
@@ -63,40 +73,34 @@ public class recipeDatabase {
         }
     }
 
-    public static String [] getCategories() throws Exception {
-        ResultSet rs = stmt.executeQuery("select count(1) from categories");
-        if(rs == null) {
-            return new String[0];
+    public static String [] getCategories() {
+        try {
+            ResultSet rs = stmt.executeQuery("select count(1) from categories");
+            if (rs == null) {
+                return new String[0];
+            }
+            int size = rs.getInt(1);
+            String[] output = new String[size];
+            int index = 0;
+            rs = stmt.executeQuery("select * from categories");
+            while (rs.next()) {
+                output[index++] = rs.getInt("id") + ": " + rs.getString("name");
+            }
+            return output;
         }
-        int size = rs.getInt(1);
-        String[] output = new String[size];
-        int index = 0;
-        rs = stmt.executeQuery("select * from categories");
-        while (rs.next()) {
-            output[index++] = rs.getInt("id") + ": " + rs.getString("name");
+        catch (Exception e) {
+            e.printStackTrace();
         }
-        return output;
+        return null;
     }
 
-    public static DatabaseEntry [] select(String table) throws Exception {
-        ResultSet rs = stmt.executeQuery("select count(1) from " + table);
-        int size = rs.getInt(1);
-        if(size == 0) {
-            return new DatabaseEntry[0];
+    public static void deleteRecipe(int recipeId) {
+        try {
+            stmt.executeUpdate("delete from recipes where id = " + recipeId + ";");
         }
-        DatabaseEntry[] output = new DatabaseEntry[size];
-        int index = 0;
-        rs = stmt.executeQuery("select * from " + table + ";");
-        //System.out.println(rs.getInt(1));
-        while (rs.next()) {
-            output[index++] = new DatabaseEntry(rs.getInt(1), rs.getString(2));
-
+        catch(Exception e) {
+            e.printStackTrace();
         }
-        return output;
-    }
-
-    public static void delete(String table, String name) throws Exception {
-        stmt.executeUpdate("delete from " + table + " where name = '" + name + "';");
     }
 
     public static int insert(String table, String name) throws Exception{
@@ -122,7 +126,7 @@ public class recipeDatabase {
         return output;
     }
 
-    public static int insertRecipe (String _recipeName, String _description, String[] _ingredients, String[] _ingredientAmounts, String[] _categories, String[] _directions) {
+    public static int insertRecipe (String _recipeName, String _description, String[] _ingredients, String[] _ingredientAmounts, String[] _categories, String _directions) {
         int recipeId = 0;
         try {
 
@@ -137,88 +141,142 @@ public class recipeDatabase {
                 int categoryId = insert("categories", category);
                 stmt.executeUpdate("insert into recipes_categories (recipeId, categoryId) values (" + recipeId + "," + categoryId + ");");
             }
-            for(String direction: _directions) {
-                stmt.executeUpdate("insert into directions (recipeId, direction) values (" + recipeId + ", '" + direction + "');");
-            }
-
-
+            stmt.executeUpdate("insert into directions (recipeId, direction) values (" + recipeId + ", '" + _directions + "');");
         }
         catch (Exception e) {
-
+            e.printStackTrace();
         }
         return recipeId;
     }
 
-    public static Recipe readRecipe(int recipeId) throws  Exception {
-        //first read the name
-        ResultSet rs = stmt.executeQuery("select * from recipes where id = '" + recipeId + "';");
-        String recipeName = rs.getString("name");
-        String description = rs.getString("description");
+    public static Recipe readRecipe(int recipeId) {
+        try {
+            //first read the name
+            ResultSet rs = stmt.executeQuery("select * from recipes where id = '" + recipeId + "';");
+            String recipeName = rs.getString("name");
+            String description = rs.getString("description");
 
 
-        //reading categories
-        int num = stmt.executeQuery("select count(1) from recipes_categories where recipeId = '" + recipeId + "';").getInt(1);
-        DatabaseEntry[] categoriesDE = new DatabaseEntry[num];
-        rs = stmt.executeQuery("select categories.id,categories.name from categories " +
-                "join recipes_categories on categories.id = recipes_categories.categoryId " +
-                "where recipes_categories.recipeId=" + recipeId + ";");
-        for(int i = 0; rs.next(); i++) {
-            categoriesDE[i] = new DatabaseEntry(rs.getInt(1), rs.getString(2));
+            //reading categories
+            int num = stmt.executeQuery("select count(1) from recipes_categories where recipeId = '" + recipeId + "';").getInt(1);
+            String[] categories = new String[num];
+            rs = stmt.executeQuery("select categories.id,categories.name from categories " +
+                    "join recipes_categories on categories.id = recipes_categories.categoryId " +
+                    "where recipes_categories.recipeId=" + recipeId + ";");
+            for (int i = 0; rs.next(); i++) {
+                categories[i] = rs.getString(2);
+            }
+
+            //now reading ingredients
+            num = stmt.executeQuery("select count(1) from recipes_ingredients where recipeId = '" + recipeId + "';").getInt(1);
+            String[] ingredients = new String[num];
+            String[] ingredientAmounts = new String[num];
+            rs = stmt.executeQuery("select ingredients.id,name,ingredientAmount from ingredients " +
+                    "join recipes_ingredients on ingredients.id = recipes_ingredients.ingredientId " +
+                    "where recipes_ingredients.recipeId=" + recipeId + ";");
+            for (int i = 0; rs.next(); i++) {
+                ingredients[i] = rs.getString(2);
+                ingredientAmounts[i] = rs.getString(3);
+            }
+
+            //now reading directions
+            /*num = stmt.executeQuery("select count(1) from directions where recipeId = '" + recipeId + "';").getInt(1);
+            DatabaseEntry[] directionsDE = new DatabaseEntry[num];
+            rs = stmt.executeQuery("select id, direction from directions where recipeId=" + recipeId + ";");
+            for (int i = 0; rs.next(); i++) {
+                directionsDE[i] = new DatabaseEntry(rs.getInt(1), rs.getString(2));
+            }
+            */
+            String directions = stmt.executeQuery("select direction from directions where recipeId='" + recipeId + "';").getString(1);
+
+            return new Recipe(recipeName, description, ingredients, ingredientAmounts, categories, directions);
         }
-
-        //now reading ingredients
-        num = stmt.executeQuery("select count(1) from recipes_ingredients where recipeId = '" + recipeId + "';").getInt(1);
-        DatabaseEntry[] ingredientsDE = new DatabaseEntry[num];
-        DatabaseEntry[] ingredientAmountsDE = new DatabaseEntry[num];
-        rs = stmt.executeQuery("select ingredients.id,name,ingredientAmount from ingredients " +
-                "join recipes_ingredients on ingredients.id = recipes_ingredients.ingredientId " +
-                "where recipes_ingredients.recipeId=" + recipeId + ";");
-        for(int i = 0; rs.next(); i++) {
-            ingredientsDE[i] = new DatabaseEntry(rs.getInt(1), rs.getString(2));
-            ingredientAmountsDE[i] = new DatabaseEntry(rs.getInt(1), rs.getString(3));
+        catch (Exception e) {
+            e.printStackTrace();
         }
-
-        //now reading directions
-        num = stmt.executeQuery("select count(1) from directions where recipeId = '" + recipeId + "';").getInt(1);
-        DatabaseEntry[] directionsDE = new DatabaseEntry[num];
-        rs = stmt.executeQuery("select id, direction from directions where recipeId=" + recipeId + ";");
-        for(int i = 0; rs.next(); i++) {
-            directionsDE[i] = new DatabaseEntry(rs.getInt(1), rs.getString(2));
-        }
-
-        return new Recipe(recipeName, description, ingredientsDE, ingredientAmountsDE, categoriesDE, directionsDE);
+        return null;
     }
 
     // outputs an array of DatabaseEntry objects, sorted by name
-    public static DatabaseEntry[] sortedList() throws Exception{
-        ResultSet rs = stmt.executeQuery("select count(1) from recipes;");
-        DatabaseEntry[] output = new DatabaseEntry[rs.getInt(1)];
-        rs = stmt.executeQuery("select * from recipes order by name");
-        for(int i = 0; rs.next(); i++) {
-            output[i] = new DatabaseEntry(rs.getInt(1), rs.getString(2), rs.getString(3));
+    public static DatabaseEntry[] getRecipes() {
+        try {
+            ResultSet rs = stmt.executeQuery("select count(1) from recipes;");
+            DatabaseEntry[] output = new DatabaseEntry[rs.getInt(1)];
+            rs = stmt.executeQuery("select * from recipes order by name");
+            for (int i = 0; rs.next(); i++) {
+                output[i] = new DatabaseEntry(rs.getInt(1), rs.getString(2), rs.getString(3));
+            }
+            return output;
         }
-        return output;
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static void printRecipes() throws Exception{
-        DatabaseEntry[] cookbook = sortedList();
+        DatabaseEntry[] cookbook = getRecipes();
         System.out.println("Printing " + cookbook.length + " recipes");
         for(DatabaseEntry recipe: cookbook) {
             System.out.println(recipe.id + ": " + recipe.name + " - " + recipe.description);
         }
     }
 
+    public static DatabaseEntry[] getRecipesInCategory(String category) throws Exception {
+        try {
+            ResultSet rs = stmt.executeQuery("select count(1) from recipes_categories " +
+                    "join categories on recipes_categories.categoryId = categories.id " +
+                    "where categories.name='" + category + "';");
 
+            DatabaseEntry[] output = new DatabaseEntry[rs.getInt(1)];
+            //System.out.println("retrieving " + rs.getInt(1) + " entries");
+            rs = stmt.executeQuery("select recipes.id, recipes.name, recipes.description from recipes " +
+                    "join recipes_categories on recipes.id=recipes_categories.recipeId " +
+                    "join categories on recipes_categories.categoryId = categories.id " +
+                    "where categories.name='" + category + "';");
+            for (int i = 0; rs.next(); i++) {
+                output[i] = new DatabaseEntry(rs.getInt(1), rs.getString(2), rs.getString(3));
+            }
+            return output;
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
+    public static DatabaseEntry[] getRecipesWithName(String name) {
+        try {
+            ResultSet rs = stmt.executeQuery("select count(1) from recipes where name like '%" + name + "%';");
+            DatabaseEntry[] output = new DatabaseEntry[rs.getInt(1)];
+            //System.out.println("retrieving " + rs.getInt(1) + " entries");
+            rs = stmt.executeQuery("select recipes.id, recipes.name, recipes.description from recipes where name like '%" + name + "%';");
+            for (int i = 0; rs.next(); i++) {
+                output[i] = new DatabaseEntry(rs.getInt(1), rs.getString(2), rs.getString(3));
+            }
+            return output;
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-
-    //todo public void addRecipe (Recipe _newRecipe)
-    //todo public void addRecipe (String _recipeName, String[] _ingredients, String[] _categories, String[] _directions) {
-    //todo public ArrayList<Recipe> searchByName(String searchedString) {
-    //todo public ArrayList<Recipe> searchByIngredient(String searchedString) {
-    //todo public ArrayList<Recipe> searchByCategory(String searchedString) {
-    //todo public Set<String> findCategories() {
-    //todo public Set<String> findIngredients() {
-    //todo public ArrayList<Recipe> sortRecipeAlphabetical() {
+    public static int updateRecipe(Recipe recipe) {
+        deleteRecipe(recipe.recipeId);
+        String [] ingredients = new String[recipe.ingredients.length];
+        for(int i = 0; i < ingredients.length; i++) {
+            ingredients[i] = recipe.ingredients[i];
+        }
+        String [] ingredientAmounts = new String[recipe.ingredientAmounts.length];
+        for(int i = 0; i < ingredientAmounts.length; i++) {
+            ingredientAmounts[i] = recipe.ingredientAmounts[i];
+        }
+        String [] categories = new String[recipe.categories.length];
+        for(int i = 0; i < categories.length; i++) {
+            categories[i] = recipe.categories[i];
+        }
+        return insertRecipe(recipe.name, recipe.description, ingredients, ingredientAmounts, categories, recipe.directions);
+    }
 }
 

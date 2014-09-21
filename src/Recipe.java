@@ -4,13 +4,13 @@ public class Recipe {
 	
 	public String name;
     public String description;
-	public DatabaseEntry[] ingredients;
-    public DatabaseEntry[] ingredientAmounts;
-	public DatabaseEntry[] categories;
-	public DatabaseEntry[] directions;
+	public String[] ingredients;
+    public String[] ingredientAmounts;
+	public String[] categories;
+	public String directions;
     public int recipeId;
 	
-	Recipe(String _name, String _description, DatabaseEntry[] _ingredients, DatabaseEntry[] _ingredientAmounts, DatabaseEntry[] _categories, DatabaseEntry[] _directions) {
+	Recipe(String _name, String _description, String[] _ingredients, String[] _ingredientAmounts, String[] _categories, String _directions) {
 		name = _name;
         description = _description;
 		ingredients = _ingredients;
@@ -33,10 +33,8 @@ public class Recipe {
 			output += "\n\t\t" + categories[c];			// Each of these goes through the array of strings and prints each
 		}
 		output += "\n\tDirections:";
-		for (int d = 0; d < directions.length; d++) {
-			output += "\n\t\t" + directions[d];			//
-		}
-		
+			output += "\n\t\t" + directions;			//
+
 		return output;
 	}
 	
@@ -48,9 +46,10 @@ public class Recipe {
 
     public boolean equals(Recipe other) {
         boolean output = this.name.equalsIgnoreCase(other.name);
-        output &= equalDatabaseEntryArrays(ingredients, other.ingredients);
-        output &= equalDatabaseEntryArrays(categories, other.categories);
-        output &= equalDatabaseEntryArrays(directions, other.directions);
+        output &= equalStringArrays(ingredients, other.ingredients);
+        output &= equalStringArrays(ingredientAmounts, other.ingredientAmounts);
+        output &= equalStringArrays(categories, other.categories);
+        output &= directions.equals(other.directions);
         return output;
     }
 
@@ -74,17 +73,27 @@ public class Recipe {
         return output;
     }
 
+    public static boolean equalStringArrays(String[] arr1, String[] arr2) {
+        boolean equal = true;
+        equal &= arr1.length == arr2.length;
+        if(equal) {
+            for(int i = 0; i < arr1.length; i++) {
+                equal &= arr1[i].equals(arr2[i]);
+            }
+        }
+        return equal;
+    }
+
     private static String recipeEqualsTest() {
         // create some recipes to test...
-        DatabaseEntry ingredient1 = new DatabaseEntry(1, "ingredient1");
-        DatabaseEntry ingredient2 = new DatabaseEntry(2, "ingredient1");
-        DatabaseEntry ingredient3 = new DatabaseEntry(1, "ingredient1");
-        DatabaseEntry category = new DatabaseEntry(1, "Drinks");
-        DatabaseEntry direction = new DatabaseEntry(1, "Stir");
-        Recipe first  = new Recipe("testRecipe", "testRecipe", new DatabaseEntry[]{ingredient1, ingredient2}, new DatabaseEntry[]{ingredient1, ingredient2}, new DatabaseEntry[]{category}, new DatabaseEntry[]{direction});
-        Recipe second  = new Recipe("TESTRECIPE","testRecipe", new DatabaseEntry[]{ingredient1, ingredient2}, new DatabaseEntry[]{ingredient1, ingredient2}, new DatabaseEntry[]{category}, new DatabaseEntry[]{direction});
-        Recipe third  = new Recipe("testRecipe2", "testRecipe", new DatabaseEntry[]{ingredient1, ingredient2}, new DatabaseEntry[]{ingredient1, ingredient2}, new DatabaseEntry[]{category}, new DatabaseEntry[]{direction});
-        Recipe fourth  = new Recipe("testRecipe", "testRecipe", new DatabaseEntry[]{ingredient3, ingredient2}, new DatabaseEntry[]{ingredient1, ingredient2}, new DatabaseEntry[]{category}, new DatabaseEntry[]{direction});
+        String[] ingredients = new String[]{"ingredient1", "ingredient2"};
+        String[] ingredients2 = new String[]{"ingredient2", "ingredient2"};
+        String[] category = new String[]{"Drinks"};
+        String[] direction = new String[]{"Stir"};
+        Recipe first  = new Recipe("testRecipe", "testRecipe", ingredients, ingredients2, category, "test");
+        Recipe second  = new Recipe("TESTRECIPE","testRecipe", ingredients, ingredients2, category, "test");
+        Recipe third  = new Recipe("testRecipe2", "testRecipe", ingredients, ingredients2, category, "test");
+        Recipe fourth  = new Recipe("testRecipe", "testRecipe", ingredients, ingredients, category, "test");
 
         String returnString = "";
         boolean testSuccessful;
@@ -103,8 +112,8 @@ public class Recipe {
         if(!test3Success)
             returnString += "test3, ";
 
-        // compare the first and fourth - should be true
-        boolean test4Success = first.equals(fourth);
+        // compare the first and fourth - should be false
+        boolean test4Success = !first.equals(fourth);
         if(!test4Success)
             returnString += "test4, ";
 
@@ -117,7 +126,5 @@ public class Recipe {
             returnString = "failure: " + returnString;
         return returnString;
     }
-
-
 
 }
