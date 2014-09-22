@@ -1,16 +1,17 @@
 import javax.swing.*;
-import java.awt.event.*;
 
+import java.awt.event.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class LeftPanel extends JPanel implements ActionListener{
 
 	private ImageIcon editIcon,deleteIcon,addIcon;
     private JButton edit,delete,add;
     private JLabel title,programTitle;
-    private JPanel recipes;
     private JComboBox categories;
     private JPanel buttonPanel,mainPanel;
+    private RecipeListPanel listPanel;
 
     public LeftPanel(){
     	
@@ -22,9 +23,9 @@ public class LeftPanel extends JPanel implements ActionListener{
     	this.programTitle.setFont(new Font("Serif", Font.PLAIN, 45));
     	this.programTitle.setPreferredSize(new Dimension(300,50));
     	
-    	this.recipes = new JPanel();
-    	this.recipes.setBorder(BorderFactory.createBevelBorder(1));
-    	this.recipes.setPreferredSize(new Dimension(300,900));
+    	this.listPanel = new RecipeListPanel(new ArrayList<Recipe>());
+    	this.listPanel.setBorder(BorderFactory.createBevelBorder(1));
+    	this.listPanel.setPreferredSize(new Dimension(300,900));
     	
     	this.mainPanel = new JPanel();
     	this.mainPanel.setPreferredSize(new Dimension(300,100));
@@ -56,7 +57,7 @@ public class LeftPanel extends JPanel implements ActionListener{
     
         setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
         add(this.mainPanel);
-        add(this.recipes);
+        add(this.listPanel);
         add(this.buttonPanel);
         setPreferredSize(new Dimension(300,600));
         

@@ -20,16 +20,14 @@ import javax.swing.UIManager.*;
 
 public class Driver {
 	
-	public static RightPanel rightPanel = new RightPanel();
+		public static RightPanel rightPanel = new RightPanel();
         public static EditPanel editPanel = new EditPanel();
         public static AddPanel addPanel = new AddPanel();
+      
 	
 	public static void main(String[] args) throws FileNotFoundException {
 		
 		
-		
-		
-
 		try {
 		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 		        if ("Nimbus".equals(info.getName())) {
