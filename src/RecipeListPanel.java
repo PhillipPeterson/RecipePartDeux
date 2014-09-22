@@ -4,9 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 
 public class RecipeListPanel extends JPanel{
@@ -31,7 +31,10 @@ public class RecipeListPanel extends JPanel{
 		{
 			JButton button = new JButton(recipe.name);
 			button.addActionListener(new ButtonListener());
-			button.setBorder(null);
+			button.setContentAreaFilled(false);
+			button.setBorderPainted(false);
+			button.setOpaque(false);
+			button.setHorizontalAlignment(SwingConstants.LEFT);
 			add(button);
 		}
 	}
