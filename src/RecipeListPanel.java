@@ -20,7 +20,7 @@ public class RecipeListPanel extends JPanel{
 	{
 		this.recipeList = recipeList;
 		
-		setLayout(new GridLayout(1,recipeList.size()));
+		setLayout(new GridLayout(recipeList.size(),1));
 		setUpPanel();
 		
 	}
@@ -30,6 +30,7 @@ public class RecipeListPanel extends JPanel{
 		for (Recipe recipe : recipeList)
 		{
 			JButton button = new JButton(recipe.name);
+			button.addActionListener(new ButtonListener());
 			button.setBorder(null);
 			add(button);
 		}
