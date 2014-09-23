@@ -1,24 +1,36 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 
 public class AddPanel extends JPanel implements ActionListener{
     
-    private JButton addButton, cancelButton;
+    private JButton addButton, cancelButton, addIngButton, delIngButton;
     private JLabel titleLabel, recipeLabel;
-    private JLabel tagLabel, ingLabel, dirLabel;
-    private JTextField name, tags, ingrediants;
+    private JLabel tagLabel, amtLabel, ingLabel, dirLabel, desLabel;
+    private JTextField name, tags, description;
     private JTextArea directions;
-    private JPanel titlePanel, namePanel, tagPanel, ingPanel, dirPanel,
-            buttonPanel, mainPanel;
+    private JPanel titlePanel, namePanel, tagPanel, ingredientsPanel, ingPanel, 
+            amtPanel, ingButPanel, dirPanel, desPanel, buttonPanel, mainPanel;
+    private ArrayList<JTextField> ingredients, amounts;
     
     public AddPanel(){
+        
+        JScrollPane scrollPane = new JScrollPane();
+        
+        
+        amounts = new ArrayList<JTextField>();
+        ingredients = new ArrayList<JTextField>();
         
         addButton = new JButton("Add Recipe");
         addButton.addActionListener(this);
         cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(this);
+        addIngButton = new JButton("Add Ingredient");
+        addIngButton.addActionListener(this);
+        delIngButton = new JButton("Remove Ingredient");
+        delIngButton.addActionListener(this);
         
         titleLabel = new JLabel("Add Recipe",SwingConstants.CENTER);
         titleLabel.setPreferredSize(new Dimension(500,50));
@@ -29,20 +41,17 @@ public class AddPanel extends JPanel implements ActionListener{
         recipeLabel = new JLabel("Recipe:");
         tagLabel = new JLabel("Tags:");
         ingLabel = new JLabel("Ingrediants:");
+        amtLabel = new JLabel("Amounts:");
         dirLabel = new JLabel("Directions:");
+        desLabel = new JLabel("Description:");
         
         name = new JTextField("Enter Recipe Name here");
-        name.setPreferredSize(new Dimension(400,30));
-        name.addFocusListener(new AddPanel.Prompt());
-        tags = new JTextField("Enter tags here");
-        tags.setPreferredSize(new Dimension(400,30));
-        tags.addFocusListener(new AddPanel.Prompt());
-        ingrediants = new JTextField("Enter ingrediants here");
-        ingrediants.setPreferredSize(new Dimension(400,30));
-        ingrediants.addFocusListener(new AddPanel.Prompt());
+        tags = new JTextField("Enter Tags here");
+        ingredients.add(new JTextField("Enter Ingredients here"));
+        amounts.add(new JTextField("Enter the amount for ingredient"));
         directions = new JTextArea("Enter Directions here");
         directions.setPreferredSize(new Dimension(400,200));
-        directions.addFocusListener(new AddPanel.Prompt());
+        description = new JTextField("Enter Description here");
         
         mainPanel = new JPanel();
         
@@ -50,39 +59,64 @@ public class AddPanel extends JPanel implements ActionListener{
         namePanel = new JPanel();
         tagPanel = new JPanel();
         ingPanel = new JPanel();
+        amtPanel = new JPanel();
         dirPanel = new JPanel();
+        desPanel = new JPanel();
         buttonPanel = new JPanel();
+        ingredientsPanel = new JPanel();
+        ingredientsPanel.setLayout(new BoxLayout(ingredientsPanel, BoxLayout.LINE_AXIS));
+        ingButPanel = new JPanel();
+        ingButPanel.setLayout(new BoxLayout(ingButPanel, BoxLayout.LINE_AXIS));
         
         titlePanel.add(titleLabel);
         
         namePanel.setLayout(new BorderLayout());
-        namePanel.add(recipeLabel, BorderLayout.NORTH);
+        namePanel.add(recipeLabel, BorderLayout.CENTER);
         namePanel.add(name, BorderLayout.SOUTH);
         
         tagPanel.setLayout(new BorderLayout());
-        tagPanel.add(tagLabel, BorderLayout.NORTH);
+        tagPanel.add(tagLabel, BorderLayout.CENTER);
         tagPanel.add(tags, BorderLayout.SOUTH);
         
-        ingPanel.setLayout(new BorderLayout());
-        ingPanel.add(ingLabel, BorderLayout.NORTH);
-        ingPanel.add(ingrediants, BorderLayout.SOUTH);
+        ingPanel.setLayout(new BoxLayout(ingPanel, BoxLayout.PAGE_AXIS));
+        ingPanel.add(ingLabel, BorderLayout.CENTER);
+        ingPanel.add(ingredients.get(0), BorderLayout.SOUTH);
+        
+        amtPanel.setLayout(new BoxLayout(amtPanel, BoxLayout.PAGE_AXIS));
+        amtPanel.add(amtLabel, BorderLayout.CENTER);
+        amtPanel.add(amounts.get(0), BorderLayout.SOUTH);
         
         dirPanel.setLayout(new BorderLayout());
-        dirPanel.add(dirLabel,BorderLayout.NORTH);
+        dirPanel.add(dirLabel,BorderLayout.CENTER);
         dirPanel.add(directions, BorderLayout.SOUTH);
+        
+        desPanel.setLayout(new BorderLayout());
+        desPanel.add(desLabel,BorderLayout.CENTER);
+        desPanel.add(description, BorderLayout.SOUTH);
         
         buttonPanel.add(addButton);
         buttonPanel.add(cancelButton);
         
+        ingredientsPanel.add(amtPanel);
+        ingredientsPanel.add(ingPanel);
+        
+        ingButPanel.add(addIngButton);
+        ingButPanel.add(delIngButton);
         
         mainPanel.add(namePanel);
+        mainPanel.add(desPanel);
         mainPanel.add(tagPanel);
-        mainPanel.add(ingPanel);
+        mainPanel.add(ingredientsPanel);
+        mainPanel.add(ingButPanel);
         mainPanel.add(dirPanel);
+        
+        scrollPane.setViewportView(mainPanel);
+        
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
         
         setLayout(new BorderLayout());
         add(titlePanel, BorderLayout.NORTH);
-        add(mainPanel, BorderLayout.CENTER);
+        add(scrollPane, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
         
         setPreferredSize(new Dimension(700,600));
@@ -100,35 +134,33 @@ public class AddPanel extends JPanel implements ActionListener{
         {
             //code for saving recipe to database
         }
-    }
-    
-    public class Prompt implements FocusListener 
-    {
-	
-        public void focusGained(FocusEvent e)
+        if(e.getSource().equals(addIngButton))
         {
-               //removes text from searchBar when it regains focus 
-          if(e.getSource() == name)
-          {
-            name.setText("");
-          }
-          if(e.getSource() == tags)
-          {
-            tags.setText("");
-          }
-          if(e.getSource() == ingrediants)
-          {
-            ingrediants.setText("");
-          }
-          if(e.getSource() == directions)
-          {
-            directions.setText("");
-          }
+            amounts.add(new JTextField());
+            ingredients.add(new JTextField());
+            
+            for(int i = 1; i < 2; i++)
+            {
+                amtPanel.add(amounts.get(amounts.size()-1), BorderLayout.AFTER_LAST_LINE);
+                ingPanel.add(ingredients.get(ingredients.size()-1), BorderLayout.AFTER_LAST_LINE);
+            }
+            amtPanel.revalidate();
+            ingPanel.revalidate();
+            
+            repaint();
+            
         }
-        
-        public void focusLost(FocusEvent e){}
+        if(e.getSource().equals(delIngButton))
+        {
+            amtPanel.remove(amounts.get(amounts.size()-1));
+            amounts.remove(amounts.size()-1);
+            ingPanel.remove(ingredients.get(ingredients.size()-1));
+            ingredients.remove(ingredients.size()-1);
+            amtPanel.revalidate();
+            ingPanel.revalidate();
+            
+            repaint();
+        }
     }
-    
-    
     
 }
