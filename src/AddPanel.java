@@ -19,25 +19,21 @@ public class AddPanel extends JPanel implements ActionListener{
     
     public AddPanel(){
         
-
-        JScrollPane scrollPane = new JScrollPane();
+        try {
+            for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            // If Nimbus is not available, you can set the GUI to another look and feel.
+        }
         
+        JScrollPane scrollPane = new JScrollPane();
         
         amounts = new ArrayList<JTextField>();
         ingredients = new ArrayList<JTextField>();
-        
-
-		try {
-		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-		        if ("Nimbus".equals(info.getName())) {
-		            UIManager.setLookAndFeel(info.getClassName());
-		            break;
-		        }
-		    }
-		} catch (Exception e) {
-		    // If Nimbus is not available, you can set the GUI to another look and feel.
-		}
-		
 
         addButton = new JButton("Add Recipe");
         addButton.addActionListener(this);
@@ -56,7 +52,7 @@ public class AddPanel extends JPanel implements ActionListener{
         
         recipeLabel = new JLabel("Recipe:");
         tagLabel = new JLabel("Tags:");
-        ingLabel = new JLabel("Ingrediants:");
+        ingLabel = new JLabel("Ingredients:");
         amtLabel = new JLabel("Amounts:");
         dirLabel = new JLabel("Directions:");
         desLabel = new JLabel("Description:");

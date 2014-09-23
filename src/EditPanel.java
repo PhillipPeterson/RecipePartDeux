@@ -53,7 +53,7 @@ public class EditPanel extends JPanel implements ActionListener{
         
         recipeLabel = new JLabel("Recipe:");
         tagLabel = new JLabel("Tags:");
-        ingLabel = new JLabel("Ingrediants:");
+        ingLabel = new JLabel("Ingredients:");
         amtLabel = new JLabel("Amounts:");
         dirLabel = new JLabel("Directions:");
         desLabel = new JLabel("Description:");
