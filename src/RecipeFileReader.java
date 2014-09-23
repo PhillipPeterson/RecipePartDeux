@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class RecipeFileReader {
-
+/*
 	String filePath;
 
 	// Delimiters used in file
@@ -135,5 +135,5 @@ public class RecipeFileReader {
 
 		return recipeList;
 	}
-
+*/
 }

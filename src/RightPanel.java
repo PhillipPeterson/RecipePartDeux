@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 
 
 public class RightPanel extends JPanel{
@@ -26,6 +28,18 @@ public class RightPanel extends JPanel{
 	private JPanel searchPanel,mainPanel,titlePanel;
 	
 	public RightPanel(){
+		
+		try {
+		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+		        if ("Nimbus".equals(info.getName())) {
+		            UIManager.setLookAndFeel(info.getClassName());
+		            break;
+		        }
+		    }
+		} catch (Exception e) {
+		    // If Nimbus is not available, you can set the GUI to another look and feel.
+		}
+		
 		this.recipeTitle = new JLabel("Title",SwingConstants.CENTER);
 		this.recipeTitle.setPreferredSize(new Dimension(500,50));
 		this.recipeTitle.setFont(new Font("Serif", Font.PLAIN, 50));
@@ -75,7 +89,10 @@ public class RightPanel extends JPanel{
 		//removes text from searchBar when it regains focus 
 	   if(e.getSource() == searchBar)
 	   {
-	     searchBar.setText("");
+		   
+		 if(searchBar.getText().equals("search")){
+			 searchBar.setText("");
+		 }
 	   }
 	 }
 	 public void focusLost(FocusEvent e)

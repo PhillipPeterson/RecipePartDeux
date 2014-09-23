@@ -14,7 +14,7 @@ import java.util.Set;
  */
 
 public class Search {
-
+/*
 	public static ArrayList<Recipe> searchByName(String searchedString,
 			ArrayList<Recipe> recipeArray) {
 
@@ -109,5 +109,5 @@ public class Search {
 
 		return alphabeticalList;
 	}
-
+*/
 }

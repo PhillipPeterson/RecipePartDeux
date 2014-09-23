@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.UIManager.LookAndFeelInfo;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -16,6 +18,17 @@ public class EditPanel extends JPanel implements ActionListener{
     private ArrayList<JTextField> ingredients, amounts;
     
     public EditPanel(){
+    	
+		try {
+		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+		        if ("Nimbus".equals(info.getName())) {
+		            UIManager.setLookAndFeel(info.getClassName());
+		            break;
+		        }
+		    }
+		} catch (Exception e) {
+		    // If Nimbus is not available, you can set the GUI to another look and feel.
+		}
         
         JScrollPane scrollPane = new JScrollPane();
         

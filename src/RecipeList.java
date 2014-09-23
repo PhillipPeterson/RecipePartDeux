@@ -17,7 +17,7 @@ import java.util.*;
  */
 
 public class RecipeList {
-    ArrayList<Recipe> recipeList;
+    /*ArrayList<Recipe> recipeList;
     RecipeFileReader recRead;
 
     public RecipeList(String recipeListFileName) {
@@ -129,5 +129,5 @@ public class RecipeList {
         return alphabeticalList;
     }
 
-
+*/
 }
