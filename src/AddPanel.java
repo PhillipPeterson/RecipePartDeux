@@ -155,11 +155,9 @@ public class AddPanel extends JPanel implements ActionListener{
             amounts.add(new JTextField());
             ingredients.add(new JTextField());
             
-            for(int i = 1; i < 2; i++)
-            {
-                amtPanel.add(amounts.get(amounts.size()-1), BorderLayout.AFTER_LAST_LINE);
-                ingPanel.add(ingredients.get(ingredients.size()-1), BorderLayout.AFTER_LAST_LINE);
-            }
+            amtPanel.add(amounts.get(amounts.size()-1), BorderLayout.AFTER_LAST_LINE);
+            ingPanel.add(ingredients.get(ingredients.size()-1), BorderLayout.AFTER_LAST_LINE);
+            
             amtPanel.revalidate();
             ingPanel.revalidate();
             
