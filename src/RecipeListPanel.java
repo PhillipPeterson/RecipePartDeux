@@ -6,36 +6,74 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
 
-public class RecipeListPanel extends JPanel{
+public class RecipeListPanel extends JScrollPane{
 
 	public ArrayList<JButton> recipeButtons;
 	public ArrayList<Recipe> recipeList;
 	public JButton lastButtonHit;
 	public String recipeToShow;
+	public JScrollPane scrollBar;
+	public static JPanel mainPanel = new JPanel();
+	RecipeDatabase data = new RecipeDatabase("recipe.db");
 	
 	RecipeListPanel(ArrayList<Recipe> recipeList)
 	{
-		this.recipeList = recipeList;
+		super(mainPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
-		setLayout(new GridLayout(recipeList.size(),1));
+		this.recipeList = getInitialRecipeList();
+		
+		mainPanel.setLayout(new GridLayout(recipeList.size(),1));
+		
 		setUpPanel();
 		
+		
+		
+	}
+	
+	private ArrayList<Recipe> getInitialRecipeList()
+	{
+		ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+		for(int i = 0; i < 100 ; i++)
+		{
+			recipes.add(new Recipe("TestRecipe",null,null,null,null,null));
+		}
+		
+		
+		DatabaseEntry[] databaseEntries = data.getRecipes();
+		
+		for(DatabaseEntry entry : databaseEntries)
+		{
+			recipes.add(data.readRecipe(entry.id));
+		}
+		
+		
+		for(int i = 0; i < 100 ; i++)
+		{
+			recipes.add(new Recipe("Test",null,null,null,null,null));
+		}
+		
+		return recipes;
 	}
 	
 	private void setUpPanel()
 	{
 		for (Recipe recipe : recipeList)
 		{
+			JPanel panel = new JPanel();
+			panel.setBackground(Color.white);
 			JButton button = new JButton(recipe.name);
 			button.addActionListener(new ButtonListener());
 			button.setContentAreaFilled(false);
 			button.setBorderPainted(false);
 			button.setOpaque(false);
 			button.setHorizontalAlignment(SwingConstants.LEFT);
-			add(button);
+			panel.setSize(button.getSize());
+			panel.add(button);
+			mainPanel.add(panel);
 		}
 	}
 	
@@ -48,6 +86,7 @@ public class RecipeListPanel extends JPanel{
 				lastButtonHit = (JButton)event.getSource();
 				lastButtonHit.setForeground(Color.blue);
 				recipeToShow = lastButtonHit.getText();
+				lastButtonHit.getParent();
 			}
 			
 			else if(lastButtonHit != null)
@@ -57,6 +96,11 @@ public class RecipeListPanel extends JPanel{
 				lastButtonHit.setForeground(Color.blue);
 				recipeToShow = lastButtonHit.getText();
 			}
+			
+			DatabaseEntry[] recipeNamesList = data.getRecipesWithName(lastButtonHit.getText());
+			int recipeID = recipeNamesList[0].id;
+			Recipe recipeSelected =  data.readRecipe(recipeID);
+			//updateScreen(recipeSelected);
 			
 			
 		}
