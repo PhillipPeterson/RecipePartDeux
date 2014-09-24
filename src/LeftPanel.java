@@ -15,6 +15,21 @@ public class LeftPanel extends JPanel implements ActionListener{
 
     public LeftPanel(){
     	
+    	// create some recipes to test...
+        String[] ingredients = new String[]{"ingredient1", "ingredient2"};
+        String[] ingredients2 = new String[]{"ingredient2", "ingredient2"};
+        String[] category = new String[]{"Drinks"};
+        String[] direction = new String[]{"Stir"};
+        Recipe first  = new Recipe("testRecipe", "testRecipe", ingredients, ingredients2, category, "test");
+        Recipe second  = new Recipe("TESTRECIPE","testRecipe", ingredients, ingredients2, category, "test");
+        Recipe third  = new Recipe("testRecipe2", "testRecipe", ingredients, ingredients2, category, "test");
+        Recipe fourth  = new Recipe("testRecipe", "testRecipe", ingredients, ingredients, category, "test");
+        
+        ArrayList<Recipe> recipeList = new ArrayList<Recipe>();
+        recipeList.add(first);
+        recipeList.add(second);
+        recipeList.add(third);
+        recipeList.add(fourth);
     	this.editIcon = new ImageIcon("./Icons/edit.png");
     	this.deleteIcon = new ImageIcon("./Icons/delete.png");
     	this.addIcon = new ImageIcon("./Icons/add.png");
@@ -23,7 +38,7 @@ public class LeftPanel extends JPanel implements ActionListener{
     	this.programTitle.setFont(new Font("Serif", Font.PLAIN, 45));
     	this.programTitle.setPreferredSize(new Dimension(300,50));
     	
-    	this.listPanel = new RecipeListPanel(new ArrayList<Recipe>());
+    	this.listPanel = new RecipeListPanel(recipeList);
     	this.listPanel.setBorder(BorderFactory.createBevelBorder(1));
     	this.listPanel.setPreferredSize(new Dimension(300,900));
     	
