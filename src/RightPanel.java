@@ -13,15 +13,18 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+
+import com.sun.xml.internal.ws.util.StringUtils;
 
 
 public class RightPanel extends JPanel{
 	
 	private ImageIcon searchIcon;
-	private JTextArea recipe;
+	private JTextPane recipe;
 	private JLabel recipeTitle, tags;
 	private JButton search;
 	private JTextField searchBar;
@@ -47,8 +50,9 @@ public class RightPanel extends JPanel{
 		this.tags = new JLabel("Tags:");
 		this.tags.setBorder(BorderFactory.createBevelBorder(1));
 		
-		this.recipe = new JTextArea();
+		this.recipe = new JTextPane();
 		this.recipe.setPreferredSize(new Dimension(700,500));
+		this.recipe.setEditable(false);
 		
 		this.searchBar = new JTextField("search");
 		this.searchBar.addFocusListener(new Prompt());
@@ -79,8 +83,47 @@ public class RightPanel extends JPanel{
 		add(this.titlePanel);
 		add(this.mainPanel);
 		setPreferredSize(new Dimension(700,600));
+		
+        String[] ingredients = new String[]{"ingredient1", "ingredient2"};
+        String[] ingredients2 = new String[]{"ingredient2", "ingredient2"};
+        String[] category = new String[]{"Drinks"};
+        String[] direction = new String[]{"Stir"};
+        Recipe first  = new Recipe("testRecipe", "testRecipe", ingredients, ingredients2, category, "test");
+        displayRecipe(first);
 	}
 	
+	
+    public void displayRecipe(Recipe recipe){
+    	this.recipeTitle.setText(recipe.name);
+    	this.tags.setText(joinArray(recipe.categories, ","));
+    	this.recipe.setText("########## INGREDIENTS ###########\n\n" + 
+    						formatIngredients(recipe.ingredients, recipe.ingredientAmounts) + 
+    						"\n" + recipe.description);
+    }
+    
+    //joins a string array together by delimiter
+    public String joinArray(String[] stringArray, String delimiter){
+    	String joinedString = "";
+    	for(int i = 0; i < stringArray.length; i++){
+    		if(i == stringArray.length - 1){
+    			joinedString += stringArray[i];
+    		}
+    		else{
+    			joinedString += stringArray[i] + delimiter;
+    		}
+    	}
+    	return joinedString;
+    }
+	
+    public String formatIngredients(String[] ingredients, String[] ingredientAmounts){
+    	String formattedString = "";
+    	for(int i = 0; i < ingredients.length; i++){
+    		formattedString += ingredients[i] + ": " + ingredientAmounts[i] + "\n";
+    	}
+    	return formattedString;
+    	
+    }
+    
 	public class Prompt implements FocusListener 
 	{
 	
