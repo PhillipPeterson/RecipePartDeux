@@ -27,7 +27,7 @@ public class RecipeListPanel extends JScrollPane{
 		
 		this.recipeList = getInitialRecipeList();
 		
-		mainPanel.setLayout(new GridLayout(recipeList.size(),1));
+		mainPanel.setLayout(new GridLayout(0,1));
 		
 		setUpPanel();
 		

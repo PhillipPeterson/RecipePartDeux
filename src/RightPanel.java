@@ -11,6 +11,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
@@ -25,6 +26,7 @@ public class RightPanel extends JPanel{
 	
 	private ImageIcon searchIcon;
 	private JTextPane recipe;
+	private JScrollPane scrollPane;
 	private JLabel recipeTitle, tags;
 	private JButton search;
 	private JTextField searchBar;
@@ -53,6 +55,10 @@ public class RightPanel extends JPanel{
 		this.recipe = new JTextPane();
 		this.recipe.setPreferredSize(new Dimension(700,500));
 		this.recipe.setEditable(false);
+		this.recipe.setContentType("text/html");
+		
+		this.scrollPane = new JScrollPane(this.recipe);
+		this.scrollPane.setPreferredSize(new Dimension(700,500));
 		
 		this.searchBar = new JTextField("search");
 		this.searchBar.addFocusListener(new Prompt());
@@ -76,10 +82,10 @@ public class RightPanel extends JPanel{
 		this.mainPanel = new JPanel();
 		this.mainPanel.setLayout(new BorderLayout());
 		this.mainPanel.add(this.tags,BorderLayout.NORTH);
-		this.mainPanel.add(this.recipe,BorderLayout.CENTER);
+		this.mainPanel.add(this.scrollPane,BorderLayout.CENTER);
 		this.mainPanel.add(this.searchPanel,BorderLayout.SOUTH);
 		
-		setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+		setLayout(new BoxLayout(this,BoxLayout.PAGE_AXIS));
 		add(this.titlePanel);
 		add(this.mainPanel);
 		setPreferredSize(new Dimension(700,600));
@@ -95,10 +101,10 @@ public class RightPanel extends JPanel{
 	
     public void displayRecipe(Recipe recipe){
     	this.recipeTitle.setText(recipe.name);
-    	this.tags.setText(joinArray(recipe.categories, ","));
-    	this.recipe.setText("########## INGREDIENTS ###########\n\n" + 
+    	this.tags.setText("tags: " + joinArray(recipe.categories, ","));
+    	this.recipe.setText("<h1>INGREDIENTS </h1><hr><br/>" + 
     						formatIngredients(recipe.ingredients, recipe.ingredientAmounts) + 
-    						"\n" + recipe.description);
+    						"<br/>" + "<h1>" + "DESCRIPTION" + "</h1><hr><br/>" + recipe.description);
     }
     
     //joins a string array together by delimiter
@@ -116,11 +122,11 @@ public class RightPanel extends JPanel{
     }
 	
     public String formatIngredients(String[] ingredients, String[] ingredientAmounts){
-    	String formattedString = "";
+    	String formattedString = "<ul>";
     	for(int i = 0; i < ingredients.length; i++){
-    		formattedString += ingredients[i] + ": " + ingredientAmounts[i] + "\n";
+    		formattedString += "<li>" +  ingredients[i] + ": " + ingredientAmounts[i] + "</li><br/>";
     	}
-    	return formattedString;
+    	return formattedString + "<ul>";
     	
     }
     
