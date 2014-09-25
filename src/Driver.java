@@ -5,6 +5,7 @@ import java.util.Scanner;
 import java.util.Set;
 
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
@@ -50,6 +51,9 @@ public class Driver {
 		
 		JFrame frame = new JFrame();
 		frame.add(mainPanel);
+		frame.setTitle("Recipe Program");
+		ImageIcon icon = new ImageIcon("./Icons/Recipe-Book-icon.png");
+		frame.setIconImage(icon.getImage());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		frame.setPreferredSize(new Dimension(1000,600));
