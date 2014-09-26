@@ -42,6 +42,11 @@ public class RecipeDatabase {
                 System.out.println(RD.readRecipe(recipe.id).toString());
             }
 
+            System.out.println("Category Names: ");
+            String[] categoryNames = RD.getCategories();
+            for(String categoryName: categoryNames) {
+                System.out.println(categoryName);
+            }
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -93,7 +98,7 @@ public class RecipeDatabase {
             int index = 0;
             rs = stmt.executeQuery("select * from categories");
             while (rs.next()) {
-                output[index++] = rs.getInt("id") + ": " + rs.getString("name");
+                output[index++] = rs.getString("name");
             }
             return output;
         }
