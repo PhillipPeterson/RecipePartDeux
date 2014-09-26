@@ -19,7 +19,7 @@ public class RecipeListPanel extends JScrollPane{
 	public String recipeToShow;
 	public JScrollPane scrollBar;
 	public static JPanel mainPanel = new JPanel();
-	//RecipeDatabase data = new RecipeDatabase("recipe.db");
+	RecipeDatabase data = new RecipeDatabase("recipe.db");
 	
 	RecipeListPanel(ArrayList<Recipe> recipeList)
 	{
@@ -38,12 +38,13 @@ public class RecipeListPanel extends JScrollPane{
 	private ArrayList<Recipe> getInitialRecipeList()
 	{
 		ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+		/*
 		for(int i = 0; i < 100 ; i++)
 		{
 			recipes.add(new Recipe("TestRecipe",null,null,null,null,null));
 		}
 		
-		/*
+
 		DatabaseEntry[] databaseEntries = data.getRecipes();
 		
 		for(DatabaseEntry entry : databaseEntries)
@@ -57,6 +58,12 @@ public class RecipeListPanel extends JScrollPane{
 			recipes.add(new Recipe("Test",null,null,null,null,null));
 		}
 		*/
+        //RecipeDatabase RD = new RecipeDatabase();
+        DatabaseEntry[] DBEntriesOfRecipes = data.getRecipes();
+        for(DatabaseEntry entry: DBEntriesOfRecipes) {
+            recipes.add(data.readRecipe(entry.id));
+        }
+
 		return recipes;
 		
 	}

@@ -13,10 +13,13 @@ import java.sql.*;
 //public int updateRecipe(Recipe recipe), returns recipeId of the new recipe
 
 public class RecipeDatabase {
-    private String dbFileName = "recipe.db";
+    private String dbFileName;
     private Connection connection;
     private Statement stmt;
 
+    public RecipeDatabase() {
+        this("recipe.db");
+    }
     public RecipeDatabase(String _fileName) {
         dbFileName = _fileName;
         init();
