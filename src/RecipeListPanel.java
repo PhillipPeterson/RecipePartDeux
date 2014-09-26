@@ -9,7 +9,8 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
-
+//TODO:
+//updateRecipeList()
 
 public class RecipeListPanel extends JScrollPane{
 
@@ -19,13 +20,13 @@ public class RecipeListPanel extends JScrollPane{
 	public String recipeToShow;
 	public JScrollPane scrollBar;
 	public static JPanel mainPanel = new JPanel();
-	//RecipeDatabase data = new RecipeDatabase("recipe.db");
+	RecipeDatabase data = new RecipeDatabase("./recipe.db");
 	
 	RecipeListPanel(ArrayList<Recipe> recipeList)
 	{
 		super(mainPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
-		this.recipeList = getInitialRecipeList();
+		this.recipeList = updateRecipeList();
 		
 		mainPanel.setLayout(new GridLayout(0,1));
 		
@@ -35,15 +36,17 @@ public class RecipeListPanel extends JScrollPane{
 		
 	}
 	
-	private ArrayList<Recipe> getInitialRecipeList()
+	public ArrayList<Recipe> updateRecipeList()
 	{
 		ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+		
+		/*
 		for(int i = 0; i < 100 ; i++)
 		{
 			recipes.add(new Recipe("TestRecipe",null,null,null,null,null));
 		}
+		*/
 		
-		/*
 		DatabaseEntry[] databaseEntries = data.getRecipes();
 		
 		for(DatabaseEntry entry : databaseEntries)
@@ -51,15 +54,10 @@ public class RecipeListPanel extends JScrollPane{
 			recipes.add(data.readRecipe(entry.id));
 		}
 		
-		
-		for(int i = 0; i < 100 ; i++)
-		{
-			recipes.add(new Recipe("Test",null,null,null,null,null));
-		}
-		*/
 		return recipes;
 		
 	}
+	
 	
 	private void setUpPanel()
 	{
@@ -98,13 +96,14 @@ public class RecipeListPanel extends JScrollPane{
 				lastButtonHit = (JButton)event.getSource();
 				lastButtonHit.setForeground(Color.blue);
 				recipeToShow = lastButtonHit.getText();
-				
 			}
 			
-			//DatabaseEntry[] recipeNamesList = data.getRecipesWithName(lastButtonHit.getText());
-			//int recipeID = recipeNamesList[0].id;
-		//	Recipe recipeSelected =  data.readRecipe(recipeID);
-			//updateScreen(recipeSelected);
+			DatabaseEntry[] recipeNamesList = data.getRecipesWithName(lastButtonHit.getText());
+			int recipeID = recipeNamesList[0].id;
+			Recipe recipeSelected =  data.readRecipe(recipeID);
+			Driver.rightPanel.displayRecipe(recipeSelected);
+			
+			
 			
 			
 		}
