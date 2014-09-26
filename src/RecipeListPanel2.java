@@ -19,11 +19,7 @@ public class RecipeListPanel extends JScrollPane{
 	public String recipeToShow;
 	public JScrollPane scrollBar;
 	public static JPanel mainPanel = new JPanel();
-<<<<<<< HEAD
 	RecipeDatabase data = new RecipeDatabase("recipe.db");
-=======
-	//RecipeDatabase data = new RecipeDatabase("recipe.db");
->>>>>>> parent of 9ca3bd6... Displays recipe's from database
 	
 	RecipeListPanel(ArrayList<Recipe> recipeList)
 	{
@@ -42,7 +38,6 @@ public class RecipeListPanel extends JScrollPane{
 	private ArrayList<Recipe> getInitialRecipeList()
 	{
 		ArrayList<Recipe> recipes = new ArrayList<Recipe>();
-<<<<<<< HEAD
 
         DatabaseEntry[] DBEntriesOfRecipes = data.getRecipes();
  
@@ -51,27 +46,6 @@ public class RecipeListPanel extends JScrollPane{
             recipes.add(data.readRecipe(entry.id));
         }
 
-=======
-		for(int i = 0; i < 100 ; i++)
-		{
-			recipes.add(new Recipe("TestRecipe",null,null,null,null,null));
-		}
-		
-		/*
-		DatabaseEntry[] databaseEntries = data.getRecipes();
-		
-		for(DatabaseEntry entry : databaseEntries)
-		{
-			recipes.add(data.readRecipe(entry.id));
-		}
-		
-		
-		for(int i = 0; i < 100 ; i++)
-		{
-			recipes.add(new Recipe("Test",null,null,null,null,null));
-		}
-		*/
->>>>>>> parent of 9ca3bd6... Displays recipe's from database
 		return recipes;
 		
 	}
@@ -116,18 +90,10 @@ public class RecipeListPanel extends JScrollPane{
 				
 			}
 			
-<<<<<<< HEAD
 			DatabaseEntry[] recipeNamesList = data.getRecipesWithName(lastButtonHit.getText());
 			int recipeID = recipeNamesList[0].id;
 			Recipe recipeSelected =  data.readRecipe(recipeID);
 			Driver.rightPanel.displayRecipe(recipeSelected);
-=======
-			//DatabaseEntry[] recipeNamesList = data.getRecipesWithName(lastButtonHit.getText());
-			//int recipeID = recipeNamesList[0].id;
-		//	Recipe recipeSelected =  data.readRecipe(recipeID);
-			//updateScreen(recipeSelected);
-			
->>>>>>> parent of 9ca3bd6... Displays recipe's from database
 			
 		}
 	}
