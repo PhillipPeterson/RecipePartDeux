@@ -48,6 +48,7 @@ public class RightPanel extends JPanel{
 		this.recipeTitle = new JLabel("Title",SwingConstants.CENTER);
 		this.recipeTitle.setPreferredSize(new Dimension(500,50));
 		this.recipeTitle.setFont(new Font("Serif", Font.PLAIN, 50));
+		this.recipeTitle.setBorder(BorderFactory.createMatteBorder(0, 2, 0, 0,Color.GRAY));
 		
 		this.tags = new JLabel("Tags:");
 		this.tags.setBorder(BorderFactory.createBevelBorder(1));
@@ -58,7 +59,8 @@ public class RightPanel extends JPanel{
 		this.recipe.setContentType("text/html");
 		
 		this.scrollPane = new JScrollPane(this.recipe);
-		this.scrollPane.setPreferredSize(new Dimension(700,500));
+		this.scrollPane.setPreferredSize(new Dimension(700,900));
+		this.scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
 		this.searchBar = new JTextField("search");
 		this.searchBar.addFocusListener(new Prompt());
@@ -92,19 +94,21 @@ public class RightPanel extends JPanel{
 		
         String[] ingredients = new String[]{"ingredient1", "ingredient2"};
         String[] ingredients2 = new String[]{"ingredient2", "ingredient2"};
-        String[] category = new String[]{"Drinks"};
+        String[] category = new String[]{"Drinks","Dinner", "Desert"};
         String[] direction = new String[]{"Stir"};
-        Recipe first  = new Recipe("testRecipe", "testRecipe", ingredients, ingredients2, category, "test");
+        Recipe first  = new Recipe("Coffee", "testRecipe", ingredients, ingredients2, category, "Preheat oven to 400 degrees F (200 degrees C)." +
+"Brush both side of potato slices with butter; place them on an ungreased cookie sheet. Bake in the preheated 400 degrees F (200 degrees C) oven for 30 to 40 minutes or until lightly browned on both sides, turning once." +
+"When potatoes are ready, top with bacon, cheese, and green onion; continue baking until the cheese has melted");
         displayRecipe(first);
 	}
 	
 	
     public void displayRecipe(Recipe recipe){
     	this.recipeTitle.setText(recipe.name);
-    	this.tags.setText("tags: " + joinArray(recipe.categories, ","));
+    	this.tags.setText("Tags: " + joinArray(recipe.categories, ", "));
     	this.recipe.setText("<h1>INGREDIENTS </h1><hr><br/>" + 
     						formatIngredients(recipe.ingredients, recipe.ingredientAmounts) + 
-    						"<br/>" + "<h1>" + "DESCRIPTION" + "</h1><hr><br/>" + recipe.description);
+    						"<br/>" + "<h1>" + "DESCRIPTION" + "</h1><hr><br/>" + recipe.directions);
     }
     
     //joins a string array together by delimiter
