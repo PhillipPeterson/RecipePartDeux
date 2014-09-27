@@ -52,7 +52,7 @@ public class RecipeListPanel extends JScrollPane{
 	
 	private void setUpPanel()
 	{
-		//creates enough recipes so that the buttons display nicely
+
 		while (recipeList.size() < 11){
 			recipeList.add(new Recipe(null,null,null,null,null, null));
 		}
