@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 public class AddPanel extends JPanel implements ActionListener{
     
+    RecipeDatabase data = new RecipeDatabase("recipe.db");
+    
     private JButton addButton, cancelButton, addIngButton, delIngButton;
     private JLabel titleLabel, recipeLabel;
     private JLabel tagLabel, amtLabel, ingLabel, dirLabel, desLabel;
@@ -144,7 +146,20 @@ public class AddPanel extends JPanel implements ActionListener{
         }
         if(e.getSource().equals(addButton))
         {
-            //code for saving recipe to database
+            String addName = name.getText();
+            String addDesc = description.getText();
+            String tagsToAdd = tags.getText();
+            String[] addTagsArray = tagsToAdd.split(".[ ]*");
+            String[] addIngs = new String[ingredients.size()];
+            addIngs = ingredients.toArray(addIngs);
+            String[] addAmts = new String[amounts.size()];
+            addAmts = amounts.toArray(addAmts);
+            String addDir = directions.getText();
+            
+            //query to insert Recipe
+            //data.insertRecipe(addName, addDesc, addIngs, addAmts, addTagsArray, addDir);
+            
+            
         }
         if(e.getSource().equals(addIngButton))
         {
