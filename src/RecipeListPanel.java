@@ -54,7 +54,7 @@ public class RecipeListPanel extends JScrollPane{
 		
 	}
 	
-	private void setUpPanel()
+	public void setUpPanel()
 	{
 		for (Recipe recipe : recipeList)
 		{

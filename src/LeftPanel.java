@@ -11,7 +11,7 @@ public class LeftPanel extends JPanel implements ActionListener{
     private JLabel title,programTitle;
     private JComboBox categories;
     private JPanel buttonPanel,mainPanel;
-    private RecipeListPanel listPanel;
+    public RecipeListPanel listPanel;
     private ArrayList<String> categoriesArray;
 
     public LeftPanel(){
