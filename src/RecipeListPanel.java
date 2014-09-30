@@ -58,7 +58,7 @@ public class RecipeListPanel extends JScrollPane{
 	public void setUpPanel()
 	{
 		//ensures proper spacing between recipes in the list
-		//also makes sure panel still appears when no recipes are displayed
+		//also makes sure panel still appears when no recipes are displayed-
 		while(this.recipeList.size() < PANELMINITEMS){
 			this.recipeList.add(new Recipe(null,null,null,null,null,null));
 		}

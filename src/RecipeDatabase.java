@@ -35,6 +35,15 @@ public class RecipeDatabase {
             RD.stmt.executeUpdate("delete from recipes;");
             RD.insertRecipe("ramen noodles", "dehydrated salty noodles", new String[]{"dry ramen", "water"}, new String[]{"one package", "1 cup"}, new String[]{"snacks"}, "boil water, place ramen in boiling water, consume");
             RD.insertRecipe("soup", "canned soup", new String[]{"soup", "water"}, new String[]{"one can", "one cup"}, new String[]{"snacks","side dishes"}, "combine ingredients, add heat");
+            RD.insertRecipe("blph", "canned soup", new String[]{"soup", "water"}, new String[]{"one can", "one cup"}, new String[]{"snacks","side dishes"}, "combine ingredients, add heat");
+            RD.insertRecipe("blafiojd", "canned soup", new String[]{"soup", "water"}, new String[]{"one can", "one cup"}, new String[]{"snacks","side dishes"}, "combine ingredients, add heat");
+            RD.insertRecipe("blah", "canned soup", new String[]{"soup", "water"}, new String[]{"one can", "one cup"}, new String[]{"snacks","side dishes"}, "combine ingredients, add heat");
+            RD.insertRecipe("blang", "canned soup", new String[]{"soup", "water"}, new String[]{"one can", "one cup"}, new String[]{"snacks","side dishes"}, "combine ingredients, add heat");
+            RD.insertRecipe("blah", "canned soup", new String[]{"soup", "water"}, new String[]{"one can", "one cup"}, new String[]{"snacks","side dishes"}, "combine ingredients, add heat");
+            RD.insertRecipe("black", "canned soup", new String[]{"soup", "water"}, new String[]{"one can", "one cup"}, new String[]{"snacks","side dishes"}, "combine ingredients, add heat");
+            RD.insertRecipe("blah", "canned soup", new String[]{"soup", "water"}, new String[]{"one can", "one cup"}, new String[]{"snacks","side dishes"}, "combine ingredients, add heat");
+            RD.insertRecipe("blah", "canned soup", new String[]{"soup", "water"}, new String[]{"one can", "one cup"}, new String[]{"snacks","side dishes"}, "combine ingredients, add heat");
+            
             RD.printRecipes();
 
 

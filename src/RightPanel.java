@@ -69,6 +69,7 @@ public class RightPanel extends JPanel{
 		
 		this.searchBar = new JTextField("search");
 		this.searchBar.addFocusListener(new Prompt());
+		this.searchBar.addActionListener(new buttonListener());
 		
 		this.searchIcon = new ImageIcon("./Icons/search.png");
 		this.searchButton = new JButton();
@@ -92,6 +93,7 @@ public class RightPanel extends JPanel{
 		this.mainPanel.add(this.tags,BorderLayout.NORTH);
 		this.mainPanel.add(this.scrollPane,BorderLayout.CENTER);
 		this.mainPanel.add(this.searchPanel,BorderLayout.SOUTH);
+		
 		
 		setLayout(new BoxLayout(this,BoxLayout.PAGE_AXIS));
 		add(this.titlePanel);
@@ -148,7 +150,7 @@ public class RightPanel extends JPanel{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
-			if(e.getSource() == searchButton){
+			if(e.getSource() == searchButton || e.getSource() == searchBar){
 				String searchTerm = searchBar.getText();
 				DatabaseEntry[] matches = data.getRecipesWithName(searchTerm);
 				ArrayList<Recipe> recipes = new ArrayList<Recipe>();
