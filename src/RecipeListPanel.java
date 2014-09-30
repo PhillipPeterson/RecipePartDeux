@@ -20,6 +20,7 @@ public class RecipeListPanel extends JScrollPane{
 	public JScrollPane scrollBar;
 	public static JPanel mainPanel = new JPanel();
 	RecipeDatabase data = new RecipeDatabase("recipe.db");
+	final int PANELMINITEMS = 10;
 	
 	public static Recipe recipeSelected;
 	
@@ -56,6 +57,12 @@ public class RecipeListPanel extends JScrollPane{
 	
 	public void setUpPanel()
 	{
+		//ensures proper spacing between recipes in the list
+		//also makes sure panel still appears when no recipes are displayed
+		while(this.recipeList.size() < PANELMINITEMS){
+			this.recipeList.add(new Recipe(null,null,null,null,null,null));
+		}
+		
 		for (Recipe recipe : recipeList)
 		{
 			JPanel panel = new JPanel();
