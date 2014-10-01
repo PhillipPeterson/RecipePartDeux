@@ -6,17 +6,17 @@ import java.util.ArrayList;
 
 public class LeftPanel extends JPanel implements ActionListener{
 
-	private ImageIcon editIcon,deleteIcon,addIcon;
+    private ImageIcon editIcon,deleteIcon,addIcon;
     private JButton edit,delete,add;
     private JLabel title,programTitle;
     private JComboBox categories;
     private JPanel buttonPanel,mainPanel;
     public RecipeListPanel listPanel;
     private ArrayList<String> categoriesArray;
+    
+    private RecipeDatabase data = new RecipeDatabase("recipe.db");
 
     public LeftPanel(){
-    	
- 
         
         ArrayList<Recipe> recipeList = new ArrayList<Recipe>();
 
@@ -80,10 +80,17 @@ public class LeftPanel extends JPanel implements ActionListener{
     {
         if (e.getSource().equals(edit))
         {
-            Driver.rightPanel.setVisible(false);
-            Driver.addPanel.setVisible(false);
-            Driver.editPanel.setVisible(true);
-            
+            if(RecipeListPanel.recipeSelected == null)
+                JOptionPane.showMessageDialog(null, "You currently have no recipe "
+                    + "selected. Please select a recipe and try again");
+            else
+            {
+                Driver.rightPanel.setVisible(false);
+                Driver.addPanel.setVisible(false);
+                Driver.editPanel.setVisible(true);
+                Driver.editPanel.setRecipe(RecipeListPanel.recipeSelected);
+            }
+
             
         }
         if(e.getSource().equals(add))
@@ -94,8 +101,13 @@ public class LeftPanel extends JPanel implements ActionListener{
         }
         if(e.getSource().equals(delete))
         {
-            JOptionPane.showConfirmDialog(null, "Are you sure you want to delete"
+            int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete"
                     + " this recipe?", "Delete Recipe", JOptionPane.YES_NO_OPTION);
+            if(reply == JOptionPane.YES_OPTION)
+            {
+                data.deleteRecipe(RecipeListPanel.recipeSelected.recipeId);
+            }
+            
         }
     }
 

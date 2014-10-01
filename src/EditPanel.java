@@ -19,6 +19,8 @@ public class EditPanel extends JPanel implements ActionListener{
             amtPanel, ingButPanel, dirPanel, desPanel, buttonPanel, mainPanel;
     private ArrayList<JTextField> ingredients, amounts;
     
+    
+    
     public EditPanel(){
     	
 		try {
@@ -60,15 +62,11 @@ public class EditPanel extends JPanel implements ActionListener{
         dirLabel = new JLabel("Directions:");
         desLabel = new JLabel("Description:");
         
-        name = new JTextField("Chicken Noodles");
-        tags = new JTextField("Chicken, Noodles, Dinner");
-        ingredients.add(new JTextField("Chicken"));
-        ingredients.add(new JTextField("Noodles"));
-        amounts.add(new JTextField("1 Cup"));
-        amounts.add(new JTextField("2 Cups"));
+        name = new JTextField();
+        tags = new JTextField();
         directions = new JTextArea("Put the chicken in the noodles");
         directions.setPreferredSize(new Dimension(400,200));
-        description = new JTextField("A tasty meal for those lacking taste");
+        description = new JTextField();
         
         mainPanel = new JPanel();
         
@@ -97,13 +95,9 @@ public class EditPanel extends JPanel implements ActionListener{
         
         ingPanel.setLayout(new BoxLayout(ingPanel, BoxLayout.PAGE_AXIS));
         ingPanel.add(ingLabel, BorderLayout.CENTER);
-        ingPanel.add(ingredients.get(0), BorderLayout.SOUTH);
-        ingPanel.add(ingredients.get(1), BorderLayout.SOUTH);
         
         amtPanel.setLayout(new BoxLayout(amtPanel, BoxLayout.PAGE_AXIS));
         amtPanel.add(amtLabel, BorderLayout.CENTER);
-        amtPanel.add(amounts.get(0), BorderLayout.SOUTH);
-        amtPanel.add(amounts.get(1), BorderLayout.SOUTH);
         
         dirPanel.setLayout(new BorderLayout());
         dirPanel.add(dirLabel,BorderLayout.CENTER);
@@ -161,11 +155,8 @@ public class EditPanel extends JPanel implements ActionListener{
             updAmts = amounts.toArray(updAmts);
             String updDir = directions.getText();
             
-            //query to update Recipe
-            //Recipe(String _name, String _description, String[] _ingredients, String[] _ingredientAmounts, String[] _categories, String _directions)
-            
-            //Recipe updatedRecipe = new Recipe(updName, updDesc, updIngs, updAmts, updTagsArray, updDir);
-            //data.updateRecipe(updatedRecipe);
+            Recipe updatedRecipe = new Recipe(updName, updDesc, updIngs, updAmts, updTagsArray, updDir);
+            data.updateRecipe(updatedRecipe);
             
         }
         if(e.getSource().equals(addIngButton))
@@ -173,11 +164,10 @@ public class EditPanel extends JPanel implements ActionListener{
             amounts.add(new JTextField());
             ingredients.add(new JTextField());
             
-            for(int i = 1; i < 2; i++)
-            {
-                amtPanel.add(amounts.get(amounts.size()-1), BorderLayout.AFTER_LAST_LINE);
-                ingPanel.add(ingredients.get(ingredients.size()-1), BorderLayout.AFTER_LAST_LINE);
-            }
+
+            amtPanel.add(amounts.get(amounts.size()-1), BorderLayout.AFTER_LAST_LINE);
+            ingPanel.add(ingredients.get(ingredients.size()-1), BorderLayout.AFTER_LAST_LINE);
+            
             amtPanel.revalidate();
             ingPanel.revalidate();
             
@@ -195,6 +185,66 @@ public class EditPanel extends JPanel implements ActionListener{
             
             repaint();
         }
+    }
+    
+    public void setRecipe(Recipe recipe)
+    {
+        name.setText(recipe.name);
+        description.setText(recipe.description);
+        tags.setText(getTags(recipe.categories));
+        setAmounts(recipe.ingredientAmounts);
+        setIngredients(recipe.ingredients);
+        directions.setText(recipe.directions);
+
+        amtPanel.revalidate();
+        ingPanel.revalidate();
+
+        repaint();
+        
+    }
+    
+    private String getTags(String[] recipeTags)
+    {
+        String recipeTagString = "";
+        for (int i = 0; i < recipeTags.length; i++)
+        {
+            if(i == recipeTags.length - 1)
+                recipeTagString += recipeTags[i];
+            else
+                recipeTagString += recipeTags[i] + ", ";
+        }
+        return recipeTagString;
+    }
+    
+    private ArrayList<JTextField> setAmounts(String[] recipeAmounts)
+    {
+        amounts.clear();
+        amtPanel.removeAll();
+        amtPanel.add(amtLabel);
+        
+        for(int i = 0; i < recipeAmounts.length; i++)
+        {
+            amounts.add(new JTextField(recipeAmounts[i]));
+            amtPanel.add(amounts.get(amounts.size()-1), BorderLayout.AFTER_LAST_LINE);
+            
+        }
+        
+        return amounts;
+    }
+    
+    private ArrayList<JTextField> setIngredients(String[] recipeIngredients)
+    {
+        ingredients.clear();
+        ingPanel.removeAll();
+        ingPanel.add(ingLabel);
+        
+        for(int i = 0; i < recipeIngredients.length; i++)
+        {
+            ingredients.add(new JTextField(recipeIngredients[i]));
+            ingPanel.add(ingredients.get(ingredients.size()-1), BorderLayout.AFTER_LAST_LINE);
+        }
+        
+        return ingredients;
     }
     
 }

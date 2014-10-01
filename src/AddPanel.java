@@ -157,7 +157,7 @@ public class AddPanel extends JPanel implements ActionListener{
             String addDir = directions.getText();
             
             //query to insert Recipe
-            //data.insertRecipe(addName, addDesc, addIngs, addAmts, addTagsArray, addDir);
+            data.insertRecipe(addName, addDesc, addIngs, addAmts, addTagsArray, addDir);
             
             
         }
