@@ -11,7 +11,7 @@ public class LeftPanel extends JPanel implements ActionListener{
     private JLabel title,programTitle;
     private JComboBox categories;
     private JPanel buttonPanel,mainPanel;
-    public RecipeListPanel listPanel;
+    public static RecipeListPanel listPanel;
     private ArrayList<String> categoriesArray;
     
     private RecipeDatabase data = new RecipeDatabase("recipe.db");
@@ -105,7 +105,20 @@ public class LeftPanel extends JPanel implements ActionListener{
                     + " this recipe?", "Delete Recipe", JOptionPane.YES_NO_OPTION);
             if(reply == JOptionPane.YES_OPTION)
             {
-                data.deleteRecipe(RecipeListPanel.recipeSelected.recipeId);
+                try {
+                    data.init();
+                    data.deleteRecipe(RecipeListPanel.recipeSelected.recipeId);
+                    listPanel.updatePanel();
+                }
+                catch(Exception error)
+                {
+                    error.printStackTrace();
+                }
+                finally
+                {
+                    data.close();
+                }
+                
             }
             
         }

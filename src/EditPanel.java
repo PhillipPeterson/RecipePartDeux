@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
+import java.sql.*;
 
 public class EditPanel extends JPanel implements ActionListener{
     
@@ -33,6 +34,8 @@ public class EditPanel extends JPanel implements ActionListener{
 		} catch (Exception e) {
 		    // If Nimbus is not available, you can set the GUI to another look and feel.
 		}
+        
+        
         
         JScrollPane scrollPane = new JScrollPane();
         
@@ -148,15 +151,27 @@ public class EditPanel extends JPanel implements ActionListener{
             String updName = name.getText();
             String updDesc = description.getText();
             String tagsToAdd = tags.getText();
-            String[] updTagsArray = tagsToAdd.split(".[ ]*");
-            String[] updIngs = new String[ingredients.size()];
-            updIngs = ingredients.toArray(updIngs);
-            String[] updAmts = new String[amounts.size()];
-            updAmts = amounts.toArray(updAmts);
+            String[] updTagsArray = tagsToAdd.split(",[ ]*");
+            String[] updIngs = getIngredients(ingredients).clone();
+            String[] updAmts = getAmounts(amounts).clone();
             String updDir = directions.getText();
             
             Recipe updatedRecipe = new Recipe(updName, updDesc, updIngs, updAmts, updTagsArray, updDir);
-            data.updateRecipe(updatedRecipe);
+            updatedRecipe.recipeId = RecipeListPanel.recipeSelected.recipeId;
+            try 
+            {
+                data.init();
+                data.updateRecipe(updatedRecipe);
+                LeftPanel.listPanel.updatePanel();
+            }
+            catch(Exception error)
+            {
+                error.printStackTrace();
+            }
+            finally {
+                data.close();
+            }
+                
             
         }
         if(e.getSource().equals(addIngButton))
@@ -182,8 +197,7 @@ public class EditPanel extends JPanel implements ActionListener{
             ingredients.remove(ingredients.size()-1);
             amtPanel.revalidate();
             ingPanel.revalidate();
-            
-            repaint();
+
         }
     }
     
@@ -199,7 +213,6 @@ public class EditPanel extends JPanel implements ActionListener{
         amtPanel.revalidate();
         ingPanel.revalidate();
 
-        repaint();
         
     }
     
@@ -247,4 +260,23 @@ public class EditPanel extends JPanel implements ActionListener{
         return ingredients;
     }
     
+    private String[] getIngredients(ArrayList<JTextField> ingList)
+    {
+        String[] ingArray = new String[ingList.size()];
+        
+        for(int i = 0; i < ingList.size(); i++)
+            ingArray[i] = ingList.get(i).getText();
+        
+        return ingArray;
+    }
+    
+    private String[] getAmounts(ArrayList<JTextField> amtList)
+    {
+        String[] amtArray = new String[amtList.size()];
+        
+        for(int i = 0; i < amtList.size(); i++)
+            amtArray[i] = amtList.get(i).getText();
+        
+        return amtArray;
+    }
 }

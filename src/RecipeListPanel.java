@@ -42,14 +42,16 @@ public class RecipeListPanel extends JScrollPane{
 	
 	public ArrayList<Recipe> updateRecipeList()
 	{
-		ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+            ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+             
+            
+            DatabaseEntry[] DBEntriesOfRecipes = data.getRecipes();
 
-        DatabaseEntry[] DBEntriesOfRecipes = data.getRecipes();
- 
-        for(DatabaseEntry entry: DBEntriesOfRecipes) 
-        {
-            recipes.add(data.readRecipe(entry.id));
-        }
+            for(DatabaseEntry entry: DBEntriesOfRecipes) 
+            {
+                recipes.add(data.readRecipe(entry.id));
+            }
+            
 
 		return recipes;
 		
@@ -92,6 +94,7 @@ public class RecipeListPanel extends JScrollPane{
 	{
 		public void actionPerformed(ActionEvent event)
 		{
+                        data.init();
 			if(lastButtonHit == null)
 			{
 				lastButtonHit = (JButton)event.getSource();
@@ -109,9 +112,23 @@ public class RecipeListPanel extends JScrollPane{
 				recipeToShow = lastButtonHit.getText();
 				
 			}
+                        
+                        
 			
 			Driver.rightPanel.displayRecipe(lastRecipeSelected());
-			
+			data.close();
 		}
 	}
+        
+        public void updatePanel()
+        {
+            mainPanel.removeAll();
+            data.init();
+            
+            this.recipeList = updateRecipeList();
+            setUpPanel();
+            data.close();
+            
+            revalidate();
+        }
 }

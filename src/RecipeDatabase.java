@@ -211,8 +211,9 @@ public class RecipeDatabase {
             }
             */
             String directions = stmt.executeQuery("select direction from directions where recipeId='" + recipeId + "';").getString(1);
-
-            return new Recipe(recipeName, description, ingredients, ingredientAmounts, categories, directions);
+            Recipe returnRecipe = new Recipe(recipeName, description, ingredients, ingredientAmounts, categories, directions);
+            returnRecipe.recipeId = recipeId;
+            return returnRecipe;
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -305,6 +306,18 @@ public class RecipeDatabase {
             categories[i] = recipe.categories[i];
         }
         return insertRecipe(recipe.name, recipe.description, ingredients, ingredientAmounts, categories, recipe.directions);
+    }
+    
+    public void close()
+    {
+        try
+        {
+            connection.close();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }
 

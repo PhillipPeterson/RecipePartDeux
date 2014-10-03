@@ -149,16 +149,26 @@ public class AddPanel extends JPanel implements ActionListener{
             String addName = name.getText();
             String addDesc = description.getText();
             String tagsToAdd = tags.getText();
-            String[] addTagsArray = tagsToAdd.split(".[ ]*");
-            String[] addIngs = new String[ingredients.size()];
-            addIngs = ingredients.toArray(addIngs);
-            String[] addAmts = new String[amounts.size()];
-            addAmts = amounts.toArray(addAmts);
+            String[] addTagsArray = tagsToAdd.split(",[ ]*");
+            String[] addIngs = getIngredients(ingredients).clone();
+            String[] addAmts = getAmounts(amounts).clone();
             String addDir = directions.getText();
             
             //query to insert Recipe
-            data.insertRecipe(addName, addDesc, addIngs, addAmts, addTagsArray, addDir);
-            
+            try 
+            {
+                data.init();
+                data.insertRecipe(addName, addDesc, addIngs, addAmts, addTagsArray, addDir);
+                LeftPanel.listPanel.updatePanel();
+            }
+            catch(Exception error)
+            {
+                error.printStackTrace();
+            }
+            finally
+            {
+                data.close();
+            }
             
         }
         if(e.getSource().equals(addIngButton))
@@ -172,8 +182,6 @@ public class AddPanel extends JPanel implements ActionListener{
             amtPanel.revalidate();
             ingPanel.revalidate();
             
-            repaint();
-            
         }
         if(e.getSource().equals(delIngButton))
         {
@@ -183,9 +191,28 @@ public class AddPanel extends JPanel implements ActionListener{
             ingredients.remove(ingredients.size()-1);
             amtPanel.revalidate();
             ingPanel.revalidate();
-            
-            repaint();
+
         }
+    }
+    
+    private String[] getIngredients(ArrayList<JTextField> ingList)
+    {
+        String[] ingArray = new String[ingList.size()];
+        
+        for(int i = 0; i < ingList.size(); i++)
+            ingArray[i] = ingList.get(i).getText();
+        
+        return ingArray;
+    }
+    
+    private String[] getAmounts(ArrayList<JTextField> amtList)
+    {
+        String[] amtArray = new String[amtList.size()];
+        
+        for(int i = 0; i < amtList.size(); i++)
+            amtArray[i] = amtList.get(i).getText();
+        
+        return amtArray;
     }
     
 }
