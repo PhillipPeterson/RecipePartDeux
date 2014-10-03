@@ -41,8 +41,8 @@ public class LeftPanel extends JPanel implements ActionListener{
     	}
  
     	this.categories = new JComboBox<>(this.categoriesArray.toArray());
+    	this.categories.addItemListener(new ComboBoxListener());
     	this.categories.setPreferredSize(new Dimension(300,50));
- 
     
         this.edit = new JButton();
         this.delete = new JButton();
@@ -75,6 +75,35 @@ public class LeftPanel extends JPanel implements ActionListener{
 
     }
     
+    public void recipesWithCategorySelected()
+    {
+    	ArrayList<Recipe> recipeList = new ArrayList<Recipe>();
+    	
+    	String categorySelected = (String) categories.getSelectedItem();
+    	
+    	if(!categorySelected.equals("All"))
+    	{
+	    	try {
+				DatabaseEntry[] entries = data.getRecipesInCategory(categorySelected);
+				
+				for(DatabaseEntry entry : entries)
+				{
+			
+					recipeList.add(data.readRecipe(entry.id));
+				}
+				
+				this.listPanel.updateRecipeList(recipeList);
+				
+				
+			} catch (Exception e) {
+				System.out.println("Error getting recipes in selected category: LeftPanel Line 86");
+			}	
+    	}
+    	else
+    	{
+    		this.listPanel.updateRecipeList(null);
+    	}
+    }
     
     public void actionPerformed(ActionEvent e)
     {
@@ -124,4 +153,14 @@ public class LeftPanel extends JPanel implements ActionListener{
         }
     }
 
+    private class ComboBoxListener implements ItemListener
+    {
+
+		public void itemStateChanged(ItemEvent event) {
+			
+			recipesWithCategorySelected();
+			
+		}
+    	
+    }
 }
