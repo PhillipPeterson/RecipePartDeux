@@ -24,7 +24,7 @@ public class RecipeListPanel extends JScrollPane{
 	
 	public static Recipe recipeSelected;
 	
-	public
+
 	
 	RecipeListPanel(ArrayList<Recipe> recipeList)
 	{
@@ -36,25 +36,27 @@ public class RecipeListPanel extends JScrollPane{
 		
 		setUpPanel();
 		
-		
-		
 	}
 	
-	public ArrayList<Recipe> updateRecipeList()
+	public void updateRecipeList(ArrayList<Recipe> recipes)
 	{
-            ArrayList<Recipe> recipes = new ArrayList<Recipe>();
-             
-            
-            DatabaseEntry[] DBEntriesOfRecipes = data.getRecipes();
-
-            for(DatabaseEntry entry: DBEntriesOfRecipes) 
-            {
-                recipes.add(data.readRecipe(entry.id));
-            }
-            
-
-		return recipes;
+		data.init();
+		recipeList = new ArrayList<Recipe>();
 		
+		DatabaseEntry[] DBEntriesOfRecipes = data.getRecipes();
+ 
+	    for(DatabaseEntry entry: DBEntriesOfRecipes) 
+	    {
+	        recipeList.add(data.readRecipe(entry.id));
+	    }
+	        
+	    data.close();
+	    
+		if(recipes != null)
+		{
+			this.recipeList = recipes;
+		}
+	    setUpPanel();
 	}
 	
 	public void setUpPanel()
@@ -79,6 +81,7 @@ public class RecipeListPanel extends JScrollPane{
 			panel.add(button);
 			mainPanel.add(panel);
 		}
+		
 	}
 	
 	public Recipe lastRecipeSelected()
@@ -94,7 +97,7 @@ public class RecipeListPanel extends JScrollPane{
 	{
 		public void actionPerformed(ActionEvent event)
 		{
-                        data.init();
+            data.init();
 			if(lastButtonHit == null)
 			{
 				lastButtonHit = (JButton)event.getSource();
@@ -114,21 +117,9 @@ public class RecipeListPanel extends JScrollPane{
 			}
                         
                         
-			
-			Driver.rightPanel.displayRecipe(lastRecipeSelected());
+			if(lastButtonHit.getText()!=null)
+				Driver.rightPanel.displayRecipe(lastRecipeSelected());
 			data.close();
 		}
 	}
-        
-        public void updatePanel()
-        {
-            mainPanel.removeAll();
-            data.init();
-            
-            this.recipeList = updateRecipeList();
-            setUpPanel();
-            data.close();
-            
-            revalidate();
-        }
 }
