@@ -3,6 +3,7 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class LeftPanel extends JPanel implements ActionListener{
 
@@ -12,7 +13,8 @@ public class LeftPanel extends JPanel implements ActionListener{
     private JComboBox categories;
     private JPanel buttonPanel,mainPanel;
     public static RecipeListPanel listPanel;
-    private ArrayList<String> categoriesArray;
+    private HashSet<String> categoriesSet;
+    DefaultComboBoxModel model;
     
     private RecipeDatabase data = new RecipeDatabase("recipe.db");
 
@@ -28,22 +30,25 @@ public class LeftPanel extends JPanel implements ActionListener{
     	this.programTitle.setFont(new Font("Serif", Font.PLAIN, 45));
     	this.programTitle.setPreferredSize(new Dimension(300,50));
     	
-    	this.listPanel = new RecipeListPanel(recipeList);
-    	this.listPanel.setBorder(BorderFactory.createBevelBorder(1));
-    	this.listPanel.setPreferredSize(new Dimension(300,900));
+    	listPanel = new RecipeListPanel(recipeList);
+    	listPanel.setBorder(BorderFactory.createBevelBorder(1));
+    	listPanel.setPreferredSize(new Dimension(300,900));
     	
     	this.mainPanel = new JPanel();
     	this.mainPanel.setPreferredSize(new Dimension(300,100));
-    	this.categoriesArray = new ArrayList<String>();
-    	this.categoriesArray.add("All");
+    	this.categoriesSet = new HashSet<String>();
+    	this.categoriesSet.add("All");
     	for (String category : data.getCategories()){
-    		this.categoriesArray.add(category);
+    		this.categoriesSet.add(category);
     	}
- 
-    	this.categories = new JComboBox<>(this.categoriesArray.toArray());
+   
+    	
+    	model = new DefaultComboBoxModel(categoriesSet.toArray());
+    	this.categories = new JComboBox<>();
+    	this.categories.setModel(model);
     	this.categories.addItemListener(new ComboBoxListener());
     	this.categories.setPreferredSize(new Dimension(300,50));
-    
+    	
         this.edit = new JButton();
         this.delete = new JButton();
         this.add = new JButton();
@@ -68,11 +73,33 @@ public class LeftPanel extends JPanel implements ActionListener{
     
         setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
         add(this.mainPanel);
-        add(this.listPanel);
+        add(listPanel);
         add(this.buttonPanel);
         setPreferredSize(new Dimension(300,600));
         
 
+    }
+    
+    //updates the categories dropdown menu with new categories
+    public void updateCategoriesMenu(String[] categoryArray){
+    	for(String category : categoryArray){
+    		if(!categoryInMenu(category)){
+    			this.model.addElement(category);
+    		}
+    	}
+    }
+    
+    //checks if category is already in the category dropdown menu
+    private boolean categoryInMenu(String category){
+    	int itemsCount = this.categories.getItemCount();
+    	boolean isCategoryIn = false;
+    	for(int i=0; i < itemsCount; i++){
+    		if(category.equalsIgnoreCase((String) this.categories.getItemAt(i))){
+    			isCategoryIn = true;
+    			break;
+    		}
+    	}
+    	return isCategoryIn;
     }
     
     public void recipesWithCategorySelected()
@@ -93,7 +120,7 @@ public class LeftPanel extends JPanel implements ActionListener{
 					recipeList.add(data.readRecipe(entry.id));
 				}
 				
-				this.listPanel.updateRecipeList(recipeList);
+				listPanel.updateRecipeList(recipeList);
 				
 				
 			} catch (Exception e) {
@@ -103,7 +130,7 @@ public class LeftPanel extends JPanel implements ActionListener{
     	}
     	else
     	{
-    		this.listPanel.updateRecipeList(null);
+    		listPanel.updateRecipeList(null);
     	}
     }
     
