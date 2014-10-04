@@ -30,7 +30,7 @@ public class RecipeListPanel extends JScrollPane{
 	{
 		super(mainPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
-		this.recipeList = updateRecipeList();
+		updateRecipeList(null);
 		
 		mainPanel.setLayout(new GridLayout(0,1));
 		
@@ -61,6 +61,7 @@ public class RecipeListPanel extends JScrollPane{
 	
 	public void setUpPanel()
 	{
+            mainPanel.removeAll();
 		//ensures proper spacing between recipes in the list
 		//also makes sure panel still appears when no recipes are displayed-
 		while(this.recipeList.size() < PANELMINITEMS){
@@ -81,7 +82,7 @@ public class RecipeListPanel extends JScrollPane{
 			panel.add(button);
 			mainPanel.add(panel);
 		}
-		
+		revalidate();
 	}
 	
 	public Recipe lastRecipeSelected()

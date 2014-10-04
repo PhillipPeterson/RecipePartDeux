@@ -162,7 +162,7 @@ public class EditPanel extends JPanel implements ActionListener{
             {
                 data.init();
                 data.updateRecipe(updatedRecipe);
-                LeftPanel.listPanel.updatePanel();
+                LeftPanel.listPanel.updateRecipeList(null);
             }
             catch(Exception error)
             {

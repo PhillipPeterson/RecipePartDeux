@@ -36,7 +36,7 @@ public class LeftPanel extends JPanel implements ActionListener{
     	this.mainPanel.setPreferredSize(new Dimension(300,100));
     	this.categoriesArray = new ArrayList<String>();
     	this.categoriesArray.add("All");
-    	for (String category : this.listPanel.data.getCategories()){
+    	for (String category : data.getCategories()){
     		this.categoriesArray.add(category);
     	}
  
@@ -84,6 +84,7 @@ public class LeftPanel extends JPanel implements ActionListener{
     	if(!categorySelected.equals("All"))
     	{
 	    	try {
+                                data.init();
 				DatabaseEntry[] entries = data.getRecipesInCategory(categorySelected);
 				
 				for(DatabaseEntry entry : entries)
@@ -98,6 +99,7 @@ public class LeftPanel extends JPanel implements ActionListener{
 			} catch (Exception e) {
 				System.out.println("Error getting recipes in selected category: LeftPanel Line 86");
 			}	
+                data.close();
     	}
     	else
     	{
@@ -135,9 +137,14 @@ public class LeftPanel extends JPanel implements ActionListener{
             if(reply == JOptionPane.YES_OPTION)
             {
                 try {
-                    data.init();
-                    data.deleteRecipe(RecipeListPanel.recipeSelected.recipeId);
-                    listPanel.updatePanel();
+                    if(RecipeListPanel.recipeSelected == null)
+                        JOptionPane.showMessageDialog(null, "You need to select a recipe first");
+                    else
+                    {
+                        data.init();
+                        data.deleteRecipe(RecipeListPanel.recipeSelected.recipeId);
+                        listPanel.updateRecipeList(null);
+                    }
                 }
                 catch(Exception error)
                 {

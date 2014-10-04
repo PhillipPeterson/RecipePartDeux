@@ -159,7 +159,7 @@ public class AddPanel extends JPanel implements ActionListener{
             {
                 data.init();
                 data.insertRecipe(addName, addDesc, addIngs, addAmts, addTagsArray, addDir);
-                LeftPanel.listPanel.updatePanel();
+                LeftPanel.listPanel.updateRecipeList(null);
             }
             catch(Exception error)
             {
