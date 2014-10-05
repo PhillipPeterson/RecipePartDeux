@@ -3,6 +3,8 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 
 public class LeftPanel extends JPanel implements ActionListener{
@@ -13,7 +15,7 @@ public class LeftPanel extends JPanel implements ActionListener{
     private JComboBox categories;
     private JPanel buttonPanel,mainPanel;
     public static RecipeListPanel listPanel;
-    private HashSet<String> categoriesSet;
+    private ArrayList<String> categoriesSet;
     DefaultComboBoxModel model;
     
     private RecipeDatabase data = new RecipeDatabase("recipe.db");
@@ -36,13 +38,13 @@ public class LeftPanel extends JPanel implements ActionListener{
     	
     	this.mainPanel = new JPanel();
     	this.mainPanel.setPreferredSize(new Dimension(300,100));
-    	this.categoriesSet = new HashSet<String>();
+    	this.categoriesSet = new ArrayList<String>();
     	this.categoriesSet.add("All");
     	for (String category : data.getCategories()){
     		this.categoriesSet.add(category);
     	}
    
-    	
+    	Collections.sort(this.categoriesSet);
     	model = new DefaultComboBoxModel(categoriesSet.toArray());
     	this.categories = new JComboBox<>();
     	this.categories.setModel(model);
@@ -82,25 +84,20 @@ public class LeftPanel extends JPanel implements ActionListener{
     
     //updates the categories dropdown menu with new categories
     public void updateCategoriesMenu(String[] categoryArray){
+        Arrays.sort(categoryArray);
+        //removes item listener on jcombobox
+    	this.categories.removeItemListener(this.categories.getItemListeners()[0]);
+    	this.model.removeAllElements();
+    	this.categories.addItemListener(new ComboBoxListener());
+    	//makes sure All is at beginning of categories list
+    	this.model.addElement("All");
     	for(String category : categoryArray){
-    		if(!categoryInMenu(category)){
-    			this.model.addElement(category);
-    		}
+    		this.model.addElement(category);
+
     	}
     }
     
-    //checks if category is already in the category dropdown menu
-    private boolean categoryInMenu(String category){
-    	int itemsCount = this.categories.getItemCount();
-    	boolean isCategoryIn = false;
-    	for(int i=0; i < itemsCount; i++){
-    		if(category.equalsIgnoreCase((String) this.categories.getItemAt(i))){
-    			isCategoryIn = true;
-    			break;
-    		}
-    	}
-    	return isCategoryIn;
-    }
+   
     
     public void recipesWithCategorySelected()
     {
@@ -171,6 +168,7 @@ public class LeftPanel extends JPanel implements ActionListener{
                         data.init();
                         data.deleteRecipe(RecipeListPanel.recipeSelected.recipeId);
                         listPanel.updateRecipeList(null);
+                        this.updateCategoriesMenu(data.getCategories());
                     }
                 }
                 catch(Exception error)
