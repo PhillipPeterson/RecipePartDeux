@@ -35,6 +35,7 @@ public class RightPanel extends JPanel{
 	private JButton searchButton;
 	private JTextField searchBar;
 	private JPanel searchPanel,mainPanel,titlePanel;
+    final String SEARCHDEFAULT = "search";
 	RecipeDatabase data = new RecipeDatabase("recipe.db");
 	
 	public RightPanel(){
@@ -67,7 +68,7 @@ public class RightPanel extends JPanel{
 		this.scrollPane.setPreferredSize(new Dimension(700,900));
 		this.scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
-		this.searchBar = new JTextField("search");
+		this.searchBar = new JTextField(SEARCHDEFAULT);
 		this.searchBar.addFocusListener(new Prompt());
 		this.searchBar.addActionListener(new buttonListener());
 		
@@ -174,14 +175,20 @@ public class RightPanel extends JPanel{
 	   if(e.getSource() == searchBar)
 	   {
 		   
-		 if(searchBar.getText().equals("search")){
+		 if(searchBar.getText().equals(SEARCHDEFAULT)){
 			 searchBar.setText("");
 		 }
 	   }
 	 }
 	 public void focusLost(FocusEvent e)
 	 {
-	 
+         if(e.getSource() == searchBar)
+         {
+
+             if(searchBar.getText().isEmpty()){
+                 searchBar.setText(SEARCHDEFAULT);
+             }
+         }
  }
 }
 }
