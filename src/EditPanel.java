@@ -163,6 +163,7 @@ public class EditPanel extends JPanel implements ActionListener{
                 data.init();
                 data.updateRecipe(updatedRecipe);
                 LeftPanel.listPanel.updateRecipeList(null);
+                Driver.leftPanel.updateCategoriesMenu(data.getCategories());
             }
             catch(Exception error)
             {

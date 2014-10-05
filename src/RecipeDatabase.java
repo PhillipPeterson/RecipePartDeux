@@ -285,6 +285,7 @@ public class RecipeDatabase {
     }
 
     public int updateRecipe(Recipe recipe) {
+    	System.out.println(recipe.recipeId);
         deleteRecipe(recipe.recipeId);
         String [] ingredients = new String[recipe.ingredients.length];
         for(int i = 0; i < ingredients.length; i++) {

@@ -102,13 +102,10 @@ public class RightPanel extends JPanel{
 		
 		
 		//default for recipe display
-        String[] ingredients = new String[]{"ingredient1", "ingredient2"};
-        String[] ingredients2 = new String[]{"ingredient2", "ingredient2"};
-        String[] category = new String[]{"Drinks","Dinner", "Desert"};
-        String[] direction = new String[]{"Stir"};
-        Recipe first  = new Recipe("Coffee", "testRecipe", ingredients, ingredients2, category, "Preheat oven to 400 degrees F (200 degrees C)." +
-"Brush both side of potato slices with butter; place them on an ungreased cookie sheet. Bake in the preheated 400 degrees F (200 degrees C) oven for 30 to 40 minutes or until lightly browned on both sides, turning once." +
-"When potatoes are ready, top with bacon, cheese, and green onion; continue baking until the cheese has melted");
+        String[] ingredients = new String[]{"Ingredient1", "Ingredient2"};
+        String[] ingredients2 = new String[]{"Amount", "Amount"};
+        String[] category = new String[]{"All"};
+        Recipe first  = new Recipe("Recipe", "testRecipe", ingredients, ingredients2, category, "Directions");
         displayRecipe(first);
 	}
 	
@@ -118,7 +115,7 @@ public class RightPanel extends JPanel{
     	this.tags.setText("Tags: " + joinArray(recipe.categories, ", "));
     	this.recipe.setText("<h1>INGREDIENTS </h1><hr><br/>" + 
     						formatIngredients(recipe.ingredients, recipe.ingredientAmounts) + 
-    						"<br/>" + "<h1>" + "DESCRIPTION" + "</h1><hr><br/>" + recipe.directions);
+    						"<br/>" + "<h1>" + "DESCRIPTION" + "</h1><hr><br/>" + recipe.directions.replaceAll("\n", "<br/>"));
     }
     
     //joins a string array together by delimiter
