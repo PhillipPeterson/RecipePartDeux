@@ -90,7 +90,7 @@ public class RecipeListPanel extends JScrollPane{
 		DatabaseEntry[] recipeNamesList = data.getRecipesWithName(lastButtonHit.getText());
 		int recipeID = recipeNamesList[0].id;
 		recipeSelected =  data.readRecipe(recipeID);
-		
+
 		return recipeSelected;
 	}
 	
@@ -107,7 +107,7 @@ public class RecipeListPanel extends JScrollPane{
 				lastButtonHit.getParent();
 			}
 			
-			else if(lastButtonHit != null)
+			else
 			{
 				lastButtonHit.setForeground(Color.black);
 				lastButtonHit.setBorder(null);
@@ -116,9 +116,9 @@ public class RecipeListPanel extends JScrollPane{
 				recipeToShow = lastButtonHit.getText();
 				
 			}
-                        
-                        
-			if(lastButtonHit.getText()!=null)
+
+
+			if(lastButtonHit.getText()!="")
 				Driver.rightPanel.displayRecipe(lastRecipeSelected());
 			data.close();
 		}
