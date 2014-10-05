@@ -18,6 +18,12 @@ public class AddPanel extends JPanel implements ActionListener{
     private JPanel titlePanel, namePanel, tagPanel, ingredientsPanel, ingPanel, 
             amtPanel, ingButPanel, dirPanel, desPanel, buttonPanel, mainPanel;
     private ArrayList<JTextField> ingredients, amounts;
+    final String NAMEDEFAULT = "Enter Recipe Name here";
+    final String TAGSDEFAULT = "Enter Tags here";
+    final String INGREDIENTSDEFAULT = "Enter Ingredients here";
+    final String AMOUNTDEFAULT = "Enter the amount for ingredient";
+    final String DIRECTIONSDEFAULT = "Enter Directions here";
+    final String DESCRIPTIONDEFAULT = "Enter Description here";
     
     public AddPanel(){
         
@@ -59,13 +65,17 @@ public class AddPanel extends JPanel implements ActionListener{
         dirLabel = new JLabel("Directions:");
         desLabel = new JLabel("Description:");
         
-        name = new JTextField("Enter Recipe Name here");
-        tags = new JTextField("Enter Tags here");
-        ingredients.add(new JTextField("Enter Ingredients here"));
-        amounts.add(new JTextField("Enter the amount for ingredient"));
-        directions = new JTextArea("Enter Directions here");
+        name = new JTextField(NAMEDEFAULT);
+        name.addFocusListener(new Prompt());
+        tags = new JTextField(TAGSDEFAULT);
+        tags.addFocusListener(new Prompt());
+        ingredients.add(createFieldWithFocusListener(INGREDIENTSDEFAULT));
+        amounts.add(createFieldWithFocusListener(AMOUNTDEFAULT));
+        directions = new JTextArea(DIRECTIONSDEFAULT);
+        directions.addFocusListener(new Prompt());
         directions.setPreferredSize(new Dimension(400,200));
-        description = new JTextField("Enter Description here");
+        description = new JTextField(DESCRIPTIONDEFAULT);
+        description.addFocusListener(new Prompt());
         
         mainPanel = new JPanel();
         
@@ -174,8 +184,8 @@ public class AddPanel extends JPanel implements ActionListener{
         }
         if(e.getSource().equals(addIngButton))
         {
-            amounts.add(new JTextField());
-            ingredients.add(new JTextField());
+            amounts.add(createFieldWithFocusListener(AMOUNTDEFAULT));
+            ingredients.add(createFieldWithFocusListener(INGREDIENTSDEFAULT));
             
             amtPanel.add(amounts.get(amounts.size()-1), BorderLayout.AFTER_LAST_LINE);
             ingPanel.add(ingredients.get(ingredients.size()-1), BorderLayout.AFTER_LAST_LINE);
@@ -214,6 +224,90 @@ public class AddPanel extends JPanel implements ActionListener{
             amtArray[i] = amtList.get(i).getText();
         
         return amtArray;
+    }
+
+    private JTextField createFieldWithFocusListener(String defaultText){
+        JTextField field = new JTextField(defaultText);
+        field.addFocusListener(new Prompt());
+        return field;
+    }
+
+    public class Prompt implements FocusListener{
+        public void focusGained(FocusEvent e)
+        {
+            //removes text from addPanel textfields when focus is gained and default text is present
+            if(e.getSource() == name)
+            {
+
+                if(name.getText().equals(NAMEDEFAULT)){
+                    name.setText("");
+                }
+            }
+            else if(e.getSource() == tags){
+                if(tags.getText().equals(TAGSDEFAULT)){
+                    tags.setText("");
+                }
+            }
+            else if(e.getSource() == description){
+                if(description.getText().equals(DESCRIPTIONDEFAULT)){
+                    description.setText("");
+                }
+            }
+            else if(e.getSource() == directions){
+                if(directions.getText().equals(DIRECTIONSDEFAULT)){
+                    directions.setText("");
+                }
+            }
+            else{
+                JTextField src = (JTextField) e.getSource();
+
+                if(src.getText().equals(INGREDIENTSDEFAULT) || src.getText().equals(AMOUNTDEFAULT)){
+                    src.setText("");
+                    System.out.println(src.getText());
+                }
+            }
+
+        }
+        public void focusLost(FocusEvent e)
+        {
+            if(e.getSource() == name)
+            {
+
+                if(name.getText().isEmpty()){
+                    name.setText(NAMEDEFAULT);
+                }
+            }
+            else if(e.getSource() == tags){
+                if(tags.getText().isEmpty()){
+                    tags.setText(TAGSDEFAULT);
+                }
+            }
+            else if(e.getSource() == description){
+                if(description.getText().isEmpty()){
+                    description.setText(DESCRIPTIONDEFAULT);
+                }
+            }
+            else if(e.getSource() == directions){
+                if(directions.getText().isEmpty()){
+                    directions.setText(DIRECTIONSDEFAULT);
+                }
+            }
+            else{
+                JTextField src = (JTextField) e.getSource();
+
+                if(src.getText().isEmpty()){
+                    //conditional that evaluates whether source field is for ingredients or amounts
+                    if(ingredients.contains(src)){
+                        src.setText(INGREDIENTSDEFAULT);
+                    }
+                    else{
+                        src.setText(AMOUNTDEFAULT);
+                    }
+
+                }
+            }
+
+        }
     }
     
 }
