@@ -24,6 +24,7 @@ public class Driver {
 		public static RightPanel rightPanel = new RightPanel();
         public static EditPanel editPanel = new EditPanel();
         public static AddPanel addPanel = new AddPanel();
+        public static LeftPanel leftPanel = new LeftPanel();
       
 	
 	public static void main(String[] args) throws FileNotFoundException {
@@ -43,7 +44,7 @@ public class Driver {
                 addPanel.setVisible(false);
                 editPanel.setVisible(false);
 		JPanel mainPanel = new JPanel();
-		mainPanel.add(new LeftPanel());
+		mainPanel.add(leftPanel);
 		mainPanel.add(rightPanel);
                 mainPanel.add(addPanel);
                 mainPanel.add(editPanel);

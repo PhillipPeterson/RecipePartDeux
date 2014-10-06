@@ -13,10 +13,13 @@ import java.sql.*;
 //public int updateRecipe(Recipe recipe), returns recipeId of the new recipe
 
 public class RecipeDatabase {
-    private String dbFileName = "recipe.db";
+    private String dbFileName;
     private Connection connection;
     private Statement stmt;
 
+    public RecipeDatabase() {
+        this("recipe.db");
+    }
     public RecipeDatabase(String _fileName) {
         dbFileName = _fileName;
         init();
@@ -32,6 +35,8 @@ public class RecipeDatabase {
             RD.stmt.executeUpdate("delete from recipes;");
             RD.insertRecipe("ramen noodles", "dehydrated salty noodles", new String[]{"dry ramen", "water"}, new String[]{"one package", "1 cup"}, new String[]{"snacks"}, "boil water, place ramen in boiling water, consume");
             RD.insertRecipe("soup", "canned soup", new String[]{"soup", "water"}, new String[]{"one can", "one cup"}, new String[]{"snacks","side dishes"}, "combine ingredients, add heat");
+
+            
             RD.printRecipes();
 
 
@@ -39,6 +44,11 @@ public class RecipeDatabase {
                 System.out.println(RD.readRecipe(recipe.id).toString());
             }
 
+            System.out.println("Category Names: ");
+            String[] categoryNames = RD.getCategories();
+            for(String categoryName: categoryNames) {
+                System.out.println(categoryName);
+            }
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -90,7 +100,7 @@ public class RecipeDatabase {
             int index = 0;
             rs = stmt.executeQuery("select * from categories");
             while (rs.next()) {
-                output[index++] = rs.getInt("id") + ": " + rs.getString("name");
+                output[index++] = rs.getString("name");
             }
             return output;
         }
@@ -194,8 +204,9 @@ public class RecipeDatabase {
             }
             */
             String directions = stmt.executeQuery("select direction from directions where recipeId='" + recipeId + "';").getString(1);
-
-            return new Recipe(recipeName, description, ingredients, ingredientAmounts, categories, directions);
+            Recipe returnRecipe = new Recipe(recipeName, description, ingredients, ingredientAmounts, categories, directions);
+            returnRecipe.recipeId = recipeId;
+            return returnRecipe;
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -274,6 +285,7 @@ public class RecipeDatabase {
     }
 
     public int updateRecipe(Recipe recipe) {
+    	System.out.println(recipe.recipeId);
         deleteRecipe(recipe.recipeId);
         String [] ingredients = new String[recipe.ingredients.length];
         for(int i = 0; i < ingredients.length; i++) {
@@ -288,6 +300,18 @@ public class RecipeDatabase {
             categories[i] = recipe.categories[i];
         }
         return insertRecipe(recipe.name, recipe.description, ingredients, ingredientAmounts, categories, recipe.directions);
+    }
+    
+    public void close()
+    {
+        try
+        {
+            connection.close();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }
 

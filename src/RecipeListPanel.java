@@ -19,50 +19,55 @@ public class RecipeListPanel extends JScrollPane{
 	public String recipeToShow;
 	public JScrollPane scrollBar;
 	public static JPanel mainPanel = new JPanel();
-	//RecipeDatabase data = new RecipeDatabase("recipe.db");
+	RecipeDatabase data = new RecipeDatabase("recipe.db");
+	final int PANELMINITEMS = 10;
+	
+	public static Recipe recipeSelected;
+	
+
 	
 	RecipeListPanel(ArrayList<Recipe> recipeList)
 	{
 		super(mainPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
-		this.recipeList = getInitialRecipeList();
+		updateRecipeList(null);
 		
 		mainPanel.setLayout(new GridLayout(0,1));
 		
 		setUpPanel();
 		
-		
-		
 	}
 	
-	private ArrayList<Recipe> getInitialRecipeList()
+	public void updateRecipeList(ArrayList<Recipe> recipes)
 	{
-		ArrayList<Recipe> recipes = new ArrayList<Recipe>();
-		for(int i = 0; i < 100 ; i++)
+		data.init();
+		recipeList = new ArrayList<Recipe>();
+		
+		DatabaseEntry[] DBEntriesOfRecipes = data.getRecipes();
+ 
+	    for(DatabaseEntry entry: DBEntriesOfRecipes) 
+	    {
+	        recipeList.add(data.readRecipe(entry.id));
+	    }
+	        
+	    data.close();
+	    
+		if(recipes != null)
 		{
-			recipes.add(new Recipe("TestRecipe",null,null,null,null,null));
+			this.recipeList = recipes;
 		}
-		
-		/*
-		DatabaseEntry[] databaseEntries = data.getRecipes();
-		
-		for(DatabaseEntry entry : databaseEntries)
-		{
-			recipes.add(data.readRecipe(entry.id));
-		}
-		
-		
-		for(int i = 0; i < 100 ; i++)
-		{
-			recipes.add(new Recipe("Test",null,null,null,null,null));
-		}
-		*/
-		return recipes;
-		
+	    setUpPanel();
 	}
 	
-	private void setUpPanel()
+	public void setUpPanel()
 	{
+            mainPanel.removeAll();
+		//ensures proper spacing between recipes in the list
+		//also makes sure panel still appears when no recipes are displayed-
+		while(this.recipeList.size() < PANELMINITEMS){
+			this.recipeList.add(new Recipe(null,null,null,null,null,null));
+		}
+		
 		for (Recipe recipe : recipeList)
 		{
 			JPanel panel = new JPanel();
@@ -77,12 +82,23 @@ public class RecipeListPanel extends JScrollPane{
 			panel.add(button);
 			mainPanel.add(panel);
 		}
+		revalidate();
+	}
+	
+	public Recipe lastRecipeSelected()
+	{
+		DatabaseEntry[] recipeNamesList = data.getRecipesWithName(lastButtonHit.getText());
+		int recipeID = recipeNamesList[0].id;
+		recipeSelected =  data.readRecipe(recipeID);
+
+		return recipeSelected;
 	}
 	
 	public class ButtonListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent event)
 		{
+            data.init();
 			if(lastButtonHit == null)
 			{
 				lastButtonHit = (JButton)event.getSource();
@@ -91,7 +107,7 @@ public class RecipeListPanel extends JScrollPane{
 				lastButtonHit.getParent();
 			}
 			
-			else if(lastButtonHit != null)
+			else
 			{
 				lastButtonHit.setForeground(Color.black);
 				lastButtonHit.setBorder(null);
@@ -100,13 +116,11 @@ public class RecipeListPanel extends JScrollPane{
 				recipeToShow = lastButtonHit.getText();
 				
 			}
-			
-			//DatabaseEntry[] recipeNamesList = data.getRecipesWithName(lastButtonHit.getText());
-			//int recipeID = recipeNamesList[0].id;
-		//	Recipe recipeSelected =  data.readRecipe(recipeID);
-			//updateScreen(recipeSelected);
-			
-			
+
+
+			if(lastButtonHit.getText()!="")
+				Driver.rightPanel.displayRecipe(lastRecipeSelected());
+			data.close();
 		}
 	}
 }

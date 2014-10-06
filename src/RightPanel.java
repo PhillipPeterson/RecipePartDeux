@@ -2,8 +2,12 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -28,9 +32,11 @@ public class RightPanel extends JPanel{
 	private JTextPane recipe;
 	private JScrollPane scrollPane;
 	private JLabel recipeTitle, tags;
-	private JButton search;
+	private JButton searchButton;
 	private JTextField searchBar;
 	private JPanel searchPanel,mainPanel,titlePanel;
+    final String SEARCHDEFAULT = "search";
+	RecipeDatabase data = new RecipeDatabase("recipe.db");
 	
 	public RightPanel(){
 		
@@ -62,18 +68,20 @@ public class RightPanel extends JPanel{
 		this.scrollPane.setPreferredSize(new Dimension(700,900));
 		this.scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
-		this.searchBar = new JTextField("search");
+		this.searchBar = new JTextField(SEARCHDEFAULT);
 		this.searchBar.addFocusListener(new Prompt());
+		this.searchBar.addActionListener(new buttonListener());
 		
 		this.searchIcon = new ImageIcon("./Icons/search.png");
-		this.search = new JButton();
-		this.search.setIcon(this.searchIcon);
-		this.search.setPreferredSize(new Dimension(30,30));
+		this.searchButton = new JButton();
+		this.searchButton.setIcon(this.searchIcon);
+		this.searchButton.setPreferredSize(new Dimension(30,30));
+		this.searchButton.addActionListener(new buttonListener());
 		
 		this.searchPanel = new JPanel();
 		this.searchPanel.setPreferredSize(new Dimension(700,30));
 		
-		this.searchPanel.add(this.search);
+		this.searchPanel.add(this.searchButton);
 		this.searchPanel.add(this.searchBar);
 		this.searchPanel.setLayout(new BoxLayout(this.searchPanel,BoxLayout.X_AXIS));
 		
@@ -87,18 +95,18 @@ public class RightPanel extends JPanel{
 		this.mainPanel.add(this.scrollPane,BorderLayout.CENTER);
 		this.mainPanel.add(this.searchPanel,BorderLayout.SOUTH);
 		
+		
 		setLayout(new BoxLayout(this,BoxLayout.PAGE_AXIS));
 		add(this.titlePanel);
 		add(this.mainPanel);
 		setPreferredSize(new Dimension(700,600));
 		
-        String[] ingredients = new String[]{"ingredient1", "ingredient2"};
-        String[] ingredients2 = new String[]{"ingredient2", "ingredient2"};
-        String[] category = new String[]{"Drinks","Dinner", "Desert"};
-        String[] direction = new String[]{"Stir"};
-        Recipe first  = new Recipe("Coffee", "testRecipe", ingredients, ingredients2, category, "Preheat oven to 400 degrees F (200 degrees C)." +
-"Brush both side of potato slices with butter; place them on an ungreased cookie sheet. Bake in the preheated 400 degrees F (200 degrees C) oven for 30 to 40 minutes or until lightly browned on both sides, turning once." +
-"When potatoes are ready, top with bacon, cheese, and green onion; continue baking until the cheese has melted");
+		
+		//default for recipe display
+        String[] ingredients = new String[]{"Ingredient1", "Ingredient2"};
+        String[] ingredients2 = new String[]{"Amount", "Amount"};
+        String[] category = new String[]{"All"};
+        Recipe first  = new Recipe("Recipe", "testRecipe", ingredients, ingredients2, category, "Directions");
         displayRecipe(first);
 	}
 	
@@ -108,7 +116,7 @@ public class RightPanel extends JPanel{
     	this.tags.setText("Tags: " + joinArray(recipe.categories, ", "));
     	this.recipe.setText("<h1>INGREDIENTS </h1><hr><br/>" + 
     						formatIngredients(recipe.ingredients, recipe.ingredientAmounts) + 
-    						"<br/>" + "<h1>" + "DESCRIPTION" + "</h1><hr><br/>" + recipe.directions);
+    						"<br/>" + "<h1>" + "DESCRIPTION" + "</h1><hr><br/>" + recipe.directions.replaceAll("\n", "<br/>"));
     }
     
     //joins a string array together by delimiter
@@ -134,6 +142,30 @@ public class RightPanel extends JPanel{
     	
     }
     
+    public class buttonListener implements ActionListener
+    {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			if(e.getSource() == searchButton || e.getSource() == searchBar){
+				String searchTerm = searchBar.getText();
+				DatabaseEntry[] matches = data.getRecipesWithName(searchTerm);
+				ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+				for(DatabaseEntry entry : matches){
+					recipes.add(data.readRecipe(entry.id));
+				}
+				Driver.leftPanel.listPanel.recipeList = recipes;
+				Driver.leftPanel.listPanel.mainPanel.removeAll();
+				Driver.leftPanel.listPanel.setUpPanel();
+				Driver.leftPanel.listPanel.repaint();
+				Driver.leftPanel.listPanel.revalidate();
+			}
+			
+		}
+    	
+    }
+    
 	public class Prompt implements FocusListener 
 	{
 	
@@ -143,14 +175,20 @@ public class RightPanel extends JPanel{
 	   if(e.getSource() == searchBar)
 	   {
 		   
-		 if(searchBar.getText().equals("search")){
+		 if(searchBar.getText().equals(SEARCHDEFAULT)){
 			 searchBar.setText("");
 		 }
 	   }
 	 }
 	 public void focusLost(FocusEvent e)
 	 {
-	 
+         if(e.getSource() == searchBar)
+         {
+
+             if(searchBar.getText().isEmpty()){
+                 searchBar.setText(SEARCHDEFAULT);
+             }
+         }
  }
 }
 }
