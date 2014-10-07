@@ -164,6 +164,8 @@ public class EditPanel extends JPanel implements ActionListener{
                 data.updateRecipe(updatedRecipe);
                 LeftPanel.listPanel.updateRecipeList(null);
                 Driver.leftPanel.updateCategoriesMenu(data.getCategories());
+                this.setVisible(false);
+                Driver.rightPanel.setVisible(true);
             }
             catch(Exception error)
             {

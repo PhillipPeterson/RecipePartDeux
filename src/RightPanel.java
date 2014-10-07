@@ -53,8 +53,8 @@ public class RightPanel extends JPanel{
 		
 		this.recipeTitle = new JLabel("Title",SwingConstants.CENTER);
 		this.recipeTitle.setPreferredSize(new Dimension(500,50));
-		this.recipeTitle.setFont(new Font("Serif", Font.PLAIN, 50));
-		this.recipeTitle.setBorder(BorderFactory.createMatteBorder(0, 2, 0, 0,Color.GRAY));
+		this.recipeTitle.setFont(new Font("Serif", Font.PLAIN, 45));
+		this.recipeTitle.setBorder(BorderFactory.createMatteBorder(0, 2, 0, 0,Color.BLACK));
 		
 		this.tags = new JLabel("Tags:");
 		this.tags.setBorder(BorderFactory.createBevelBorder(1));

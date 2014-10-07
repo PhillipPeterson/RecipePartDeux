@@ -171,6 +171,8 @@ public class AddPanel extends JPanel implements ActionListener{
                 data.insertRecipe(addName, addDesc, addIngs, addAmts, addTagsArray, addDir);
                 LeftPanel.listPanel.updateRecipeList(null);
                 Driver.leftPanel.updateCategoriesMenu(data.getCategories());
+                this.setVisible(false);
+                Driver.rightPanel.setVisible(true);
             }
             catch(Exception error)
             {
