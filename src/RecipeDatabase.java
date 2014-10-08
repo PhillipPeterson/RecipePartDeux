@@ -27,7 +27,7 @@ public class RecipeDatabase {
     
     public static void main(String[] args) {
         try {
-            RecipeDatabase RD = new RecipeDatabase("recipe.db");
+            RecipeDatabase RD = new RecipeDatabase("test.db");
             RD.init();
 
 
@@ -49,6 +49,22 @@ public class RecipeDatabase {
             for(String categoryName: categoryNames) {
                 System.out.println(categoryName);
             }
+
+
+            Recipe ramen = new Recipe("ramen noodles", "dehydrated salty noodles", new String[]{"dry ramen", "water"}, new String[]{"one package", "1 cup"}, new String[]{"snacks"}, "boil water, place ramen in boiling water, consume");
+            Recipe updatedRecipe = new Recipe("Name updated successfully", "updated description", new String[]{"updated ingredint1", "updated ingredint2", "updated ingredint3"}, new String[]{"amount1", "amount2", "amount3"}, new String[]{"updated category1", "updated category2", "updated category3"}, "directions");
+            ramen.recipeId = 10;
+            updatedRecipe.recipeId = 10;
+            RD.insertRecipe(ramen);
+
+            System.out.println("Before update:");
+            System.out.println(RD.readRecipe(10));
+
+            RD.updateRecipe(updatedRecipe);
+            System.out.println("After update:");
+            System.out.println(RD.readRecipe(ramen.recipeId));
+
+
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -142,11 +158,24 @@ public class RecipeDatabase {
         return output;
     }
 
+
+    public int insertRecipe(Recipe recipe) {
+        return insertRecipe(recipe.name, recipe.description, recipe.ingredients, recipe.ingredientAmounts, recipe.categories, recipe.directions, recipe.recipeId);
+    }
     public int insertRecipe (String _recipeName, String _description, String[] _ingredients, String[] _ingredientAmounts, String[] _categories, String _directions) {
         int recipeId = 0;
+        return insertRecipe(_recipeName, _description, _ingredients, _ingredientAmounts, _categories, _directions, recipeId);
+    }
+    public int insertRecipe (String _recipeName, String _description, String[] _ingredients, String[] _ingredientAmounts, String[] _categories, String _directions, int recipeId) {
+
         try {
 
-            stmt.executeUpdate("insert into recipes (name,description) values ('" + _recipeName + "', '" + _description + "');");
+            if(recipeId == 0) {
+                stmt.executeUpdate("insert into recipes (name,description) values ('" + _recipeName + "', '" + _description + "');");
+            }
+            else {
+                stmt.executeUpdate("insert into recipes (id, name,description) values (" + recipeId + ", '" + _recipeName + "', '" + _description + "');");
+            }
             ResultSet rs = stmt.getGeneratedKeys();
             recipeId = rs.getInt(1);
             for(int i = 0; i < _ingredients.length; i++) {
@@ -285,9 +314,9 @@ public class RecipeDatabase {
     }
 
     public int updateRecipe(Recipe recipe) {
-    	System.out.println(recipe.recipeId);
+    	//System.out.println(recipe.recipeId);
         deleteRecipe(recipe.recipeId);
-        String [] ingredients = new String[recipe.ingredients.length];
+        /*String [] ingredients = new String[recipe.ingredients.length];
         for(int i = 0; i < ingredients.length; i++) {
             ingredients[i] = recipe.ingredients[i];
         }
@@ -299,7 +328,11 @@ public class RecipeDatabase {
         for(int i = 0; i < categories.length; i++) {
             categories[i] = recipe.categories[i];
         }
-        return insertRecipe(recipe.name, recipe.description, ingredients, ingredientAmounts, categories, recipe.directions);
+        */
+        return insertRecipe(recipe);
+
+
+
     }
     
     public void close()
