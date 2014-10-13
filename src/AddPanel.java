@@ -146,11 +146,22 @@ public class AddPanel extends JPanel implements ActionListener{
         setPreferredSize(new Dimension(700,600));
         
     }
+
+    public void setAddPanelToDefault(){
+        name.setText(NAMEDEFAULT);
+        description.setText(DESCRIPTIONDEFAULT);
+        tags.setText(TAGSDEFAULT);
+        amounts.get(0).setText(AMOUNTDEFAULT);
+        ingredients.get(0).setText(INGREDIENTSDEFAULT);
+        directions.setText(DIRECTIONSDEFAULT);
+
+    }
     
     public void actionPerformed(ActionEvent e)
     {
         if (e.getSource().equals(cancelButton))
-        {
+        {   //resets the fields in add panel
+            setAddPanelToDefault();
             this.setVisible(false);
             Driver.rightPanel.setVisible(true);
         }
@@ -163,7 +174,7 @@ public class AddPanel extends JPanel implements ActionListener{
             String[] addIngs = getIngredients(ingredients).clone();
             String[] addAmts = getAmounts(amounts).clone();
             String addDir = directions.getText();
-            
+
             //query to insert Recipe
             try 
             {
@@ -171,6 +182,8 @@ public class AddPanel extends JPanel implements ActionListener{
                 data.insertRecipe(addName, addDesc, addIngs, addAmts, addTagsArray, addDir);
                 LeftPanel.listPanel.updateRecipeList(null);
                 Driver.leftPanel.updateCategoriesMenu(data.getCategories());
+                //resets add panel
+                setAddPanelToDefault();
                 this.setVisible(false);
                 Driver.rightPanel.setVisible(true);
             }
