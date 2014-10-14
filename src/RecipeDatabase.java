@@ -13,9 +13,9 @@ import java.sql.*;
 //public int updateRecipe(Recipe recipe), returns recipeId of the new recipe
 
 public class RecipeDatabase {
-    private String dbFileName;
-    private Connection connection;
-    private Statement stmt;
+    public String dbFileName;
+    public Connection connection;
+    public Statement stmt;
 
     public RecipeDatabase() {
         this("recipe.db");
@@ -26,50 +26,7 @@ public class RecipeDatabase {
     }
     
     public static void main(String[] args) {
-        try {
-            RecipeDatabase RD = new RecipeDatabase("test.db");
-            RD.init();
-
-
-            RD.printRecipes();
-            RD.stmt.executeUpdate("delete from recipes;");
-            RD.insertRecipe("ramen noodles", "dehydrated salty noodles", new String[]{"dry ramen", "water"}, new String[]{"one package", "1 cup"}, new String[]{"snacks"}, "boil water, place ramen in boiling water, consume");
-            RD.insertRecipe("soup", "canned soup", new String[]{"soup", "water"}, new String[]{"one can", "one cup"}, new String[]{"snacks","side dishes"}, "combine ingredients, add heat");
-
-            
-            RD.printRecipes();
-
-
-            for(DatabaseEntry recipe:RD.getRecipesWithName("s")) {
-                System.out.println(RD.readRecipe(recipe.id).toString());
-            }
-
-            System.out.println("Category Names: ");
-            String[] categoryNames = RD.getCategories();
-            for(String categoryName: categoryNames) {
-                System.out.println(categoryName);
-            }
-
-
-            Recipe ramen = new Recipe("ramen noodles", "dehydrated salty noodles", new String[]{"dry ramen", "water"}, new String[]{"one package", "1 cup"}, new String[]{"snacks"}, "boil water, place ramen in boiling water, consume");
-            Recipe updatedRecipe = new Recipe("Name updated successfully", "updated description", new String[]{"updated ingredint1", "updated ingredint2", "updated ingredint3"}, new String[]{"amount1", "amount2", "amount3"}, new String[]{"updated category1", "updated category2", "updated category3"}, "directions");
-            ramen.recipeId = 10;
-            updatedRecipe.recipeId = 10;
-            RD.insertRecipe(ramen);
-
-            System.out.println("Before update:");
-            System.out.println(RD.readRecipe(10));
-
-            RD.updateRecipe(updatedRecipe);
-            System.out.println("After update:");
-            System.out.println(RD.readRecipe(ramen.recipeId));
-
-
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-}
+    }
 
     public void init() {
         try {
@@ -273,7 +230,7 @@ public class RecipeDatabase {
         }
     }
 
-    public DatabaseEntry[] getRecipesInCategory(String category) throws Exception {
+    public DatabaseEntry[] getRecipesInCategory(String category) {
         try {
             ResultSet rs = stmt.executeQuery("select count(1) from recipes_categories " +
                     "join categories on recipes_categories.categoryId = categories.id " +
